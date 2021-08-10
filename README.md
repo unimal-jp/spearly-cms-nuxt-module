@@ -1,0 +1,1 @@
+# nuxt-spearly-cms-module
