@@ -2,7 +2,7 @@
   "name": "nuxt-spearly-cms-module",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "lint": "eslint --ext .ts,.tsx,.vue --ignore-path .eslintignore . || exit 0",
     "build": "tsc",
@@ -12,15 +12,20 @@
     "type": "git",
     "url": "git+https://github.com/unimal-jp/nuxt-spearly-cms-module.git"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "author": "",
   "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/unimal-jp/nuxt-spearly-cms-module/issues"
   },
+  "files": ["dist"],
   "homepage": "https://github.com/unimal-jp/nuxt-spearly-cms-module#readme",
   "devDependencies": {
     "@nuxt/types": "^2.15.7",
     "@nuxtjs/eslint-config-typescript": "^6.0.1",
+    "@types/node-fetch": "^2.5.12",
     "@typescript-eslint/parser": "^4.29.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
