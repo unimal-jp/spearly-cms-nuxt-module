@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'
-import { camelToSnake } from '../utils'
+import { camelToSnake, recursiveToCamels } from '../utils'
 import { List, Content } from '../types'
 
 export type BaseHeaders = {
@@ -20,8 +20,8 @@ export type GetParams = {
 }
 
 export class SpearlyApiClient {
-  private baseURL: string
-  private baseHeaders: BaseHeaders = {
+  baseURL: string
+  baseHeaders: BaseHeaders = {
     Authorization: '',
   }
 
@@ -30,9 +30,9 @@ export class SpearlyApiClient {
     this.baseHeaders.Authorization = `Bearer ${apiKey}`
   }
 
-  async getRequest<T>(endpoint: string, queries?: string): Promise<T> {
+  async getRequest<T>(endpoint: string, queries = ''): Promise<T> {
     try {
-      const response = await fetch(`${this.baseURL}/${endpoint}${queries}`, { headers: this.baseHeaders })
+      const response = await fetch(`${this.baseURL}${endpoint}${queries}`, { headers: this.baseHeaders })
       if (!response.ok) throw new Error(`${response.status}`)
 
       return response.json().then((data) => data as T)
@@ -45,12 +45,13 @@ export class SpearlyApiClient {
 
   async getList(contentTypeId: string, params?: GetParams) {
     const queries = this.bindQueriesFromParams(params)
-    const response = await this.getRequest<List>(`/content_types/${contentTypeId}`, queries)
-    return response
+    const response = await this.getRequest<List>(`/content_types/${contentTypeId}/contents`, queries)
+    return recursiveToCamels(response)
   }
 
   async getContent(contentId: string) {
-    return await this.getRequest<Content>(`/contents/${contentId}`)
+    const response = await this.getRequest<Content>(`/contents/${contentId}`)
+    return recursiveToCamels(response)
   }
 
   private bindQueriesFromParams(params?: GetParams): string {
