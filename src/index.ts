@@ -1,3 +1,2 @@
-export * from './spearly-api-client'
-export * from './types'
-export * from './utils'
+import spearlyModule from './module'
+export default spearlyModule
