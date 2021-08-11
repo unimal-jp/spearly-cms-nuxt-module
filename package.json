@@ -2,7 +2,7 @@
   "name": "nuxt-spearly-cms-module",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "lint": "eslint --ext .ts,.tsx,.vue --ignore-path .eslintignore . || exit 0",
     "build": "tsc",
@@ -20,6 +20,7 @@
   "bugs": {
     "url": "https://github.com/unimal-jp/nuxt-spearly-cms-module/issues"
   },
+  "files": ["dist"],
   "homepage": "https://github.com/unimal-jp/nuxt-spearly-cms-module#readme",
   "devDependencies": {
     "@nuxt/types": "^2.15.7",
