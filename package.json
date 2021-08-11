@@ -12,6 +12,9 @@
     "type": "git",
     "url": "git+https://github.com/unimal-jp/nuxt-spearly-cms-module.git"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "author": "",
   "license": "UNLICENSED",
   "bugs": {
