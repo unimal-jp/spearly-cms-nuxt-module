@@ -4,9 +4,11 @@ module.exports = {
     browser: true,
     node: true,
   },
-  extends: ['@nuxtjs/eslint-config-typescript', 'plugin:prettier/recommended', 'plugin:vue/recommended'],
+  extends: ['plugin:prettier/recommended', 'plugin:vue/recommended'],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2020,
+    sourceType: 'module',
   },
   rules: {
     'prettier/prettier': [
