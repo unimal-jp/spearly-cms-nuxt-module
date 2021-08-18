@@ -46,7 +46,7 @@
                 v-model="answer[field.identifier]"
                 :value="option"
                 type="radio"
-                :required="required"
+                :required="field.required"
                 :aria-describedby="field.description ? `${field.identifier}-description` : null"
               />
               <span>{{ option }}</span>
@@ -58,7 +58,7 @@
                 v-model="answer[field.identifier]"
                 :value="option"
                 type="checkbox"
-                :required="required"
+                :required="field.required"
                 :aria-describedby="field.description ? `${field.identifier}-description` : null"
               />
               <span>{{ option }}</span>
