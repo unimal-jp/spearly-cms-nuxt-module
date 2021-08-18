@@ -30,6 +30,6 @@ const spearlyModule: SpearlyModule<ModuleOptions> = function (this, moduleOption
     options,
   })
 }
-spearlyModule.meta = require('../package.json')
+spearlyModule.meta = require('../../package.json')
 
 export default spearlyModule
