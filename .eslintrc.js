@@ -5,14 +5,16 @@ module.exports = {
     node: true,
   },
   extends: ['plugin:prettier/recommended', 'plugin:vue/recommended'],
-  parser: '@typescript-eslint/parser',
+  parser: 'vue-eslint-parser',
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
+    parser: '@typescript-eslint/parser',
   },
   rules: {
     'vue/one-component-per-file': 'off',
     'vue/require-default-prop': 'off',
+    'vue/max-attributes-per-line': 'off',
     'prettier/prettier': [
       'error',
       {
