@@ -11,6 +11,8 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    'vue/one-component-per-file': 'off',
+    'vue/require-default-prop': 'off',
     'prettier/prettier': [
       'error',
       {
