@@ -41,7 +41,7 @@
             />
           </template>
           <template v-else-if="field.inputType === 'radio'">
-            <label v-for="(option, i) in field.data.options" :key="i">
+            <label v-for="(option, i) in field.data.options" :key="i" class="spearly-form-radio">
               <input
                 v-model="answer[field.identifier]"
                 :value="option"
@@ -53,7 +53,7 @@
             </label>
           </template>
           <template v-else-if="field.inputType === 'checkbox'">
-            <label v-for="(option, i) in field.data.options" :key="i">
+            <label v-for="(option, i) in field.data.options" :key="i" class="spearly-form-checkbox">
               <input
                 v-model="answer[field.identifier]"
                 :value="option"
