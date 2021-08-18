@@ -15,6 +15,7 @@ module.exports = {
     'vue/one-component-per-file': 'off',
     'vue/require-default-prop': 'off',
     'vue/max-attributes-per-line': 'off',
+    'vue/html-self-closing': 'off',
     'prettier/prettier': [
       'error',
       {
