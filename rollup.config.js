@@ -15,6 +15,7 @@ export default [
       format: 'cjs',
     },
     plugins: [
+      terser(),
       typescript({
         rootDir: 'src',
         declaration: true,
@@ -47,6 +48,7 @@ export default [
       format: 'esm',
     },
     plugins: [
+      terser(),
       typescript({
         rootDir: 'src',
         declaration: true,
@@ -79,6 +81,7 @@ export default [
       format: 'umd',
     },
     plugins: [
+      terser(),
       nodeResolve({
         rootDir: 'src',
         declaration: true,
