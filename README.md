@@ -127,7 +127,7 @@ export default {}
         />
       </fieldset>
       ...
-      <input v-model="answer._spearly_gotcha" type="text" style="position: absolute; width: 1px; height: 1px; overflow: hidden;" />
+      <input v-model="answers._spearly_gotcha" type="text" style="position: absolute; width: 1px; height: 1px; overflow: hidden;" />
       <button @click="form.submit(answers)">Submit</button> // form.submit is the method to submit the spearly form.
     </template>
   </spearly-form>
