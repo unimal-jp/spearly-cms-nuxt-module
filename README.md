@@ -120,19 +120,30 @@ export default {}
 
         <input
           :id="field.identifier"
-          v-model="answer[field.identifier]"
+          v-model="answers[field.identifier]"
           :required="field.required"
           :aria-describedby="field.description ? `${field.identifier}-description` : null"
           type="text"
         />
       </fieldset>
       ...
-      <button @click="form.submit">Submit</button> // form.submit is the method to submit the spearly form.
+      <input v-model="answer._spearly_gotcha" type="text" style="position: absolute; width: 1px; height: 1px; overflow: hidden;" />
+      <button @click="form.submit(answers)">Submit</button> // form.submit is the method to submit the spearly form.
     </template>
   </spearly-form>
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      answers: {
+        YOUR_FORM_FIELD_ID: '',
+        ...,
+        _spearly_gotcha: '',
+      }
+    }
+  }
+}
 </script>
 ```
