@@ -1,19 +1,22 @@
 <template>
-  <div>
-    <div v-for="content in contents" :key="content.publicUid">
+  <component :is="wrapper">
+    <component :is="item" v-for="content in contents" :key="content.publicUid">
       <slot :content="content" />
-    </div>
-  </div>
+    </component>
+  </component>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import { GetParams, Content } from '@unimal-jp/spearly-sdk-js'
 
-export type Props = { id: string; order?: string; orderBy?: string } & Omit<
-  GetParams,
-  'order' | 'orderBy' | 'orderDirection'
->
+export type Props = {
+  id: string
+  order?: string
+  orderBy?: string
+  wrapper?: string | Vue
+  item?: string | Vue
+} & Omit<GetParams, 'order' | 'orderBy' | 'orderDirection'>
 export type Data = { contents: Content[] }
 
 export default Vue.extend<Data, unknown, unknown, Props>({
@@ -28,6 +31,8 @@ export default Vue.extend<Data, unknown, unknown, Props>({
     filterRef: { type: String },
     rangeFrom: { type: Date },
     rangeTo: { type: Date },
+    wrapper: { type: String, default: 'div' },
+    item: { type: String, default: 'div' },
   },
   data() {
     return {

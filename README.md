@@ -72,6 +72,8 @@ export default {}
 - `filter_ref` (string)
 - `range_to` (string)
 - `range_from` (string)
+- `wrapper` (string)
+- `item` (string)
 
 ### Content
 
