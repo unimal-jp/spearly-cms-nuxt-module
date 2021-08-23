@@ -20,13 +20,17 @@
 
           <template v-if="confirm">
             <p class="spearly-form-answer-confirm">
-              {{ answer[field.identifier] }}
+              {{
+                Array.isArray(answers[field.identifier])
+                  ? answers[field.identifier].join(', ')
+                  : answers[field.identifier]
+              }}
             </p>
           </template>
           <template v-else-if="field.inputType === 'text'">
             <input
               :id="field.identifier"
-              v-model="answer[field.identifier]"
+              v-model="answers[field.identifier]"
               :required="field.required"
               :aria-describedby="field.description ? `${field.identifier}-description` : null"
               type="text"
@@ -35,7 +39,7 @@
           <template v-else-if="field.inputType === 'text_area'">
             <textarea
               :id="field.identifier"
-              v-model="answer[field.identifier]"
+              v-model="answers[field.identifier]"
               :require="field.required"
               :aria-describedby="field.description ? `${field.identifier}-description` : null"
             />
@@ -43,7 +47,7 @@
           <template v-else-if="field.inputType === 'radio'">
             <label v-for="(option, i) in field.data.options" :key="i" class="spearly-form-radio">
               <input
-                v-model="answer[field.identifier]"
+                v-model="answers[field.identifier]"
                 :value="option"
                 type="radio"
                 :required="field.required"
@@ -55,7 +59,7 @@
           <template v-else-if="field.inputType === 'checkbox'">
             <label v-for="(option, i) in field.data.options" :key="i" class="spearly-form-checkbox">
               <input
-                v-model="answer[field.identifier]"
+                v-model="answers[field.identifier]"
                 :value="option"
                 type="checkbox"
                 :required="field.required"
@@ -66,7 +70,7 @@
           </template>
 
           <input
-            v-model="answer._spearly_gotcha"
+            v-model="answers._spearly_gotcha"
             type="text"
             name="_spearly_gotcha"
             tabindex="-1"
@@ -110,14 +114,18 @@ export type Data = {
   form: {
     createdAt: Date | null
   } & Omit<Form, 'createdAt'>
-  answer: { [key: string]: string; _spearly_gotcha: string }
+  answers: { [key: string]: string | string[]; _spearly_gotcha: string }
   confirm: boolean
   submitted: boolean
 }
 
 export default Vue.extend<
   Data,
-  { submit: (fields: { [key: string]: unknown } & { _spearly_gotcha: string }) => Promise<void>; onClick: () => void },
+  {
+    setAnswersObj: () => void
+    submit: (fields: { [key: string]: unknown } & { _spearly_gotcha: string }) => Promise<void>
+    onClick: () => void
+  },
   { identifiers: string[] },
   Props
 >({
@@ -139,7 +147,7 @@ export default Vue.extend<
         endedAt: null,
         createdAt: null,
       },
-      answer: {
+      answers: {
         _spearly_gotcha: '',
       },
       confirm: false,
@@ -155,25 +163,32 @@ export default Vue.extend<
       return this.form.fields.map((field) => field.identifier)
     },
   },
-  created() {
-    if (!this.$scopedSlots.default) {
-      this.identifiers.forEach((identifier) => {
-        this.answer[identifier] = ''
-      })
-    }
+  watch: {
+    'form.fields'() {
+      this.setAnswersObj()
+    },
+  },
+  mounted() {
+    this.setAnswersObj()
   },
   methods: {
+    setAnswersObj() {
+      if (this.$scopedSlots.default) return
+      this.form.fields.forEach((field) => {
+        this.answers[field.identifier] = field.inputType === 'checkbox' && field.data?.options.length ? [] : ''
+      })
+    },
     onClick() {
       if (!this.confirm) {
         this.confirm = true
         return
       }
-      this.submit(this.answer)
+      this.submit(this.answers)
     },
     async submit(fields: { [key: string]: unknown } & { _spearly_gotcha: string }) {
       await this.$spearly.postFormAnswers(this.form.id, fields)
       this.identifiers.forEach((identifier) => {
-        this.answer[identifier] = ''
+        this.answers[identifier] = ''
       })
       if (typeof location !== 'undefined' && this.form.callbackUrl) {
         location.href = this.form.callbackUrl
