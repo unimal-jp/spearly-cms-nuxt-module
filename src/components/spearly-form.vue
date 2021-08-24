@@ -12,6 +12,12 @@
           {{ form.description }}
         </p>
 
+        <p v-if="form.startedAt || form.endedAt" class="spearly-form-period">
+          <span>
+            このフォームの受付期間は{{ formattedDate(form.startedAt) }}〜{{ formattedDate(form.endedAt) }}です。
+          </span>
+        </p>
+
         <fieldset v-for="field in form.fields" :key="field.identifier">
           <label :for="['radio', 'checkbox'].includes(field.inputType) ? null : field.identifier">
             {{ field.name }}
@@ -32,6 +38,7 @@
               :id="field.identifier"
               v-model="answers[field.identifier]"
               :required="field.required"
+              :disabled="!isActive"
               :aria-describedby="field.description ? `${field.identifier}-description` : null"
               type="text"
             />
@@ -41,6 +48,7 @@
               :id="field.identifier"
               v-model="answers[field.identifier]"
               :require="field.required"
+              :disabled="!isActive"
               :aria-describedby="field.description ? `${field.identifier}-description` : null"
             />
           </template>
@@ -51,6 +59,7 @@
                 :value="option"
                 type="radio"
                 :required="field.required"
+                :disabled="!isActive"
                 :aria-describedby="field.description ? `${field.identifier}-description` : null"
               />
               <span>{{ option }}</span>
@@ -63,6 +72,7 @@
                 :value="option"
                 type="checkbox"
                 :required="field.required"
+                :disabled="!isActive"
                 :aria-describedby="field.description ? `${field.identifier}-description` : null"
               />
               <span>{{ option }}</span>
@@ -82,7 +92,11 @@
           </p>
         </fieldset>
 
-        <button class="spearly-form-submit" @click="onClick">
+        <p v-if="!isActive" class="spearly-form-error">
+          <span>このフォームは現在受付期間外です。</span>
+        </p>
+
+        <button :disabled="!isActive" class="spearly-form-submit" @click="onClick">
           <span>送信</span>
         </button>
 
@@ -123,10 +137,14 @@ export default Vue.extend<
   Data,
   {
     setAnswersObj: () => void
+    formattedDate: (date: Date) => string
     submit: (fields: { [key: string]: unknown } & { _spearly_gotcha: string }) => Promise<void>
     onClick: () => void
   },
-  { identifiers: string[] },
+  {
+    identifiers: string[]
+    isActive: boolean
+  },
   Props
 >({
   props: {
@@ -162,6 +180,15 @@ export default Vue.extend<
     identifiers(): string[] {
       return this.form.fields.map((field) => field.identifier)
     },
+    isActive() {
+      if (!this.form.startedAt && !this.form.endedAt) return true
+      const now = new Date().getTime()
+
+      if (this.form.startedAt && this.form.startedAt.getTime() > now) return false
+      if (this.form.endedAt && this.form.endedAt.getTime() < now) return false
+
+      return true
+    },
   },
   watch: {
     'form.fields'() {
@@ -177,6 +204,15 @@ export default Vue.extend<
       this.form.fields.forEach((field) => {
         this.answers[field.identifier] = field.inputType === 'checkbox' && field.data?.options.length ? [] : ''
       })
+    },
+    formattedDate(date) {
+      if (!date) return ''
+      const y = date.getFullYear()
+      const m = String(date.getMonth() + 1).padStart(2, '0')
+      const d = String(date.getDate()).padStart(2, '0')
+      const h = String(date.getHours()).padStart(2, '0')
+      const mi = String(date.getMinutes()).padStart(2, '0')
+      return `${y}/${m}/${d} ${h}:${mi}`
     },
     onClick() {
       if (!this.confirm) {
