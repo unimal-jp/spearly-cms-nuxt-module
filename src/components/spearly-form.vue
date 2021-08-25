@@ -18,6 +18,10 @@
           </span>
         </p>
 
+        <p v-if="error" class="spearly-form-error">
+          <span>フォームを送信できませんでした。内容をご確認の上、再度お試しください。</span>
+        </p>
+
         <fieldset v-for="field in form.fields" :key="field.identifier">
           <label :for="['radio', 'checkbox'].includes(field.inputType) ? null : field.identifier">
             {{ field.name }}
@@ -92,7 +96,7 @@
           </p>
         </fieldset>
 
-        <p v-if="!isActive" class="spearly-form-error">
+        <p v-if="!isActive" class="spearly-form-outside">
           <span>このフォームは現在受付期間外です。</span>
         </p>
 
@@ -129,6 +133,7 @@ export type Data = {
     createdAt: Date | null
   } & Omit<Form, 'createdAt'>
   answers: { [key: string]: string | string[]; _spearly_gotcha: string }
+  error: boolean
   confirm: boolean
   submitted: boolean
 }
@@ -168,6 +173,7 @@ export default Vue.extend<
       answers: {
         _spearly_gotcha: '',
       },
+      error: false,
       confirm: false,
       submitted: false,
     }
@@ -222,14 +228,19 @@ export default Vue.extend<
       this.submit(this.answers)
     },
     async submit(fields: { [key: string]: unknown } & { _spearly_gotcha: string }) {
-      await this.$spearly.postFormAnswers(this.form.id, fields)
-      this.identifiers.forEach((identifier) => {
-        this.answers[identifier] = ''
-      })
-      if (typeof location !== 'undefined' && this.form.callbackUrl) {
-        location.href = this.form.callbackUrl
-      } else {
-        this.submitted = true
+      try {
+        await this.$spearly.postFormAnswers(this.form.id, fields)
+        this.identifiers.forEach((identifier) => {
+          this.answers[identifier] = ''
+        })
+        if (typeof location !== 'undefined' && this.form.callbackUrl) {
+          location.href = this.form.callbackUrl
+        } else {
+          this.submitted = true
+        }
+      } catch {
+        this.error = true
+        this.confirm = false
       }
     },
   },
