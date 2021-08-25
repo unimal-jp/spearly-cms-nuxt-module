@@ -100,6 +100,10 @@
           <span>このフォームは現在受付期間外です。</span>
         </p>
 
+        <p v-if="validateError" class="spearly-form-error">
+          <span>入力されていない項目があります。</span>
+        </p>
+
         <button :disabled="!isActive" class="spearly-form-submit" @click="onClick">
           <span>送信</span>
         </button>
@@ -126,6 +130,7 @@ import { Form } from '@unimal-jp/spearly-sdk-js'
 
 export type Props = {
   id: string
+  noValidate: boolean
 }
 
 export type Data = {
@@ -134,6 +139,7 @@ export type Data = {
   } & Omit<Form, 'createdAt'>
   answers: { [key: string]: string | string[]; _spearly_gotcha: string }
   error: boolean
+  validateError: boolean
   confirm: boolean
   submitted: boolean
 }
@@ -143,6 +149,7 @@ export default Vue.extend<
   {
     setAnswersObj: () => void
     formattedDate: (date: Date) => string
+    validate: () => boolean
     submit: (fields: { [key: string]: unknown } & { _spearly_gotcha: string }) => Promise<void>
     onClick: () => void
   },
@@ -154,6 +161,7 @@ export default Vue.extend<
 >({
   props: {
     id: { type: String, required: true },
+    noValidate: { type: Boolean },
   },
   data() {
     return {
@@ -174,6 +182,7 @@ export default Vue.extend<
         _spearly_gotcha: '',
       },
       error: false,
+      validateError: false,
       confirm: false,
       submitted: false,
     }
@@ -220,8 +229,21 @@ export default Vue.extend<
       const mi = String(date.getMinutes()).padStart(2, '0')
       return `${y}/${m}/${d} ${h}:${mi}`
     },
+    validate() {
+      const requiredFieldIds: string[] = this.form.fields
+        .filter((field) => field.required)
+        .map((field) => field.identifier)
+      return requiredFieldIds.every((identifier) => {
+        return !!this.answers[identifier]
+      })
+    },
     onClick() {
       if (!this.confirm) {
+        if (!this.validate()) {
+          this.validateError = true
+          return
+        }
+        this.validateError = false
         this.confirm = true
         return
       }
