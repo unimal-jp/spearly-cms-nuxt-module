@@ -154,6 +154,7 @@ export default Vue.extend<
     onClick: () => void
   },
   {
+    now: number
     identifiers: string[]
     isActive: boolean
   },
@@ -192,15 +193,16 @@ export default Vue.extend<
     this.form = res
   },
   computed: {
+    now() {
+      return new Date().getTime()
+    },
     identifiers(): string[] {
       return this.form.fields.map((field) => field.identifier)
     },
     isActive() {
       if (!this.form.startedAt && !this.form.endedAt) return true
-      const now = new Date().getTime()
-
-      if (this.form.startedAt && this.form.startedAt.getTime() > now) return false
-      if (this.form.endedAt && this.form.endedAt.getTime() < now) return false
+      if (this.form.startedAt && this.form.startedAt.getTime() > this.now) return false
+      if (this.form.endedAt && this.form.endedAt.getTime() < this.now) return false
 
       return true
     },
@@ -253,7 +255,8 @@ export default Vue.extend<
       try {
         await this.$spearly.postFormAnswers(this.form.id, fields)
         this.identifiers.forEach((identifier) => {
-          this.answers[identifier] = ''
+          this.answers[identifier] =
+            this.form.fields.find((field) => field.identifier === identifier)?.inputType === 'checkbox' ? [] : ''
         })
         if (typeof location !== 'undefined' && this.form.callbackUrl) {
           location.href = this.form.callbackUrl

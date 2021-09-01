@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "es2020",
+    "lib": [
+      "esnext",
+      "esnext.asynciterable",
+      "dom"
+    ],
+    "jsx": "react",
+    "jsxFactory": "h",
+    "esModuleInterop": true,
+    "noEmit": true,
+    "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
+    "types": [
+      "@unimal-jp/spearly-sdk-js",
+      "@types/node",
+      "jest"
+    ]
+  },
+  "exclude": ["node_modules"]
+}
