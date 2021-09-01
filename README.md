@@ -1,5 +1,7 @@
 # nuxt-spearly-cms-module
 
+[![Spec Test](https://github.com/unimal-jp/nuxt-spearly-cms-module/actions/workflows/spec.yml/badge.svg)](https://github.com/unimal-jp/nuxt-spearly-cms-module/actions/workflows/spec.yml)
+
 ## Getting Started
 
 ### Install
