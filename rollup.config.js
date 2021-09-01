@@ -107,7 +107,9 @@ export default [
       }),
       commonjs(),
       typescript(),
-      buble(),
+      buble({
+        transforms: { dangerousForOf: true }
+      }),
     ],
   },
 ]
