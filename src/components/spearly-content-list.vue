@@ -44,9 +44,7 @@ export default Vue.extend<Data, unknown, unknown, Props>({
     if (this.limit) params.limit = this.limit
     if (this.offset) params.offset = this.offset
     if (this.order && ['asc', 'desc'].includes(this.order)) params.order = this.order as 'desc' | 'asc'
-    if (this.orderBy && ['latest', 'popular'].includes(this.orderBy)) {
-      params.orderBy = this.orderBy as 'latest' | 'popular'
-    }
+    if (this.orderBy) params.orderBy = this.orderBy
     if (this.filterBy) params.filterBy = this.filterBy
     if (this.filterValue) params.filterValue = this.filterValue
     if (this.filterRef) params.filterRef = this.filterRef
