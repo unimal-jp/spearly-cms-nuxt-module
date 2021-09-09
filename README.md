@@ -68,7 +68,7 @@ export default {}
 - `limit` (number, 10)
 - `offset` (number, 0)
 - `order` ('desc' | 'asc', 'desc')
-- `order_by` ('latest' | 'popular')
+- `order_by` ('latest' | 'popular' | string)
 - `filter_by` (string)
 - `filter_value` (string)
 - `filter_ref` (string)
