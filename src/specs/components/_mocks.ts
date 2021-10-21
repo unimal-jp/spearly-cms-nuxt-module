@@ -1,4 +1,4 @@
-import { List, Content, Form } from '@unimal-jp/spearly-sdk-js'
+import { List, Content, Form } from '@spearly/sdk-js'
 
 export const createContentMock = (index = 0): Content => ({
   publicUid: `content_${index}`,
