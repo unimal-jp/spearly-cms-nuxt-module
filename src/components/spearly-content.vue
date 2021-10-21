@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Content } from '@unimal-jp/spearly-sdk-js'
+import { Content } from '@spearly/sdk-js'
 
 export type Props = {
   id: string

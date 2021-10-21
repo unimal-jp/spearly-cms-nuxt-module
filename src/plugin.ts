@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { Plugin } from '@nuxt/types'
 import { SpearlyContentList, SpearlyContent, SpearlyForm } from './components'
-import { SpearlyApiClient, Content, Form, GetParams } from '@unimal-jp/spearly-sdk-js'
+import { SpearlyApiClient, Content, Form, GetParams } from '@spearly/sdk-js'
 
 export type ListData = {
   contents: Content[]
