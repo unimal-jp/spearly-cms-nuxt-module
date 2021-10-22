@@ -60,6 +60,7 @@
             <label v-for="(option, i) in field.data.options" :key="i" class="spearly-form-radio">
               <input
                 v-model="answers[field.identifier]"
+                :name="field.identifier"
                 :value="option"
                 type="radio"
                 :required="field.required"
@@ -73,6 +74,7 @@
             <label v-for="(option, i) in field.data.options" :key="i" class="spearly-form-checkbox">
               <input
                 v-model="answers[field.identifier]"
+                :name="field.identifier"
                 :value="option"
                 type="checkbox"
                 :required="field.required"
