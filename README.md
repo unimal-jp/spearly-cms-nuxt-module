@@ -1,6 +1,6 @@
-# nuxt-spearly-cms-module
+# @spearly/nuxt-module
 
-[![Spec Test](https://github.com/unimal-jp/nuxt-spearly-cms-module/actions/workflows/spec.yml/badge.svg)](https://github.com/unimal-jp/nuxt-spearly-cms-module/actions/workflows/spec.yml)
+[![Spec Test](https://github.com/unimal-jp/spearly-cms-nuxt-module/actions/workflows/spec.yml/badge.svg)](https://github.com/unimal-jp/spearly-cms-nuxt-module/actions/workflows/spec.yml)
 
 ## Getting Started
 
@@ -8,10 +8,10 @@
 
 ```
 // npm
-$ npm i -S @unimal-jp/nuxt-spearly-cms-module
+$ npm i -S @spearly/nuxt-module
 
 // yarn
-$ yarn add @unimal-jp/nuxt-spearly-cms-module
+$ yarn add @spearly/nuxt-module
 ```
 
 ### Setup
@@ -20,7 +20,7 @@ $ yarn add @unimal-jp/nuxt-spearly-cms-module
 ```ts
 export default {
   ...
-  buildModules: ['@unimal-jp/nuxt-spearly-cms-module'],
+  buildModules: ['@spearly/nuxt-module'],
   spearly: {
     options: {
       apiKey: 'SPEARLY_API_KEY',
@@ -37,7 +37,7 @@ export default {
 {
   "compilerOptions": {
     ...
-    "types": ["@unimal-jp/nuxt-spearly-cms-module"]
+    "types": ["@spearly/nuxt-module"]
   },
   ...
 }

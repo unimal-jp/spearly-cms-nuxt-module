@@ -1,10 +1,10 @@
 {
-  "name": "@unimal-jp/nuxt-spearly-cms-module",
+  "name": "@spearly/nuxt-module",
   "version": "0.1.10",
   "description": "",
-  "main": "dist/cjs/nuxt-spearly-cms-module.js",
-  "module": "dist/esm/nuxt-spearly-cms-module.js",
-  "unpkg": "dist/umd/nuxt-spearly-cms-module.js",
+  "main": "dist/cjs/nuxt-module.js",
+  "module": "dist/esm/nuxt-module.js",
+  "unpkg": "dist/umd/nuxt-module.js",
   "types": "types/index.d.ts",
   "scripts": {
     "lint": "eslint --ext .ts,.tsx,.vue --ignore-path .eslintignore . || exit 0",
@@ -14,21 +14,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/unimal-jp/nuxt-spearly-cms-module.git"
+    "url": "git+https://github.com/unimal-jp/spearly-cms-nuxt-module.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://registry.npmjs.org/"
   },
   "author": "",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/unimal-jp/nuxt-spearly-cms-module/issues"
+    "url": "https://github.com/unimal-jp/spearly-cms-nuxt-module/issues"
   },
   "files": [
     "dist",
     "types/index.d.ts"
   ],
-  "homepage": "https://github.com/unimal-jp/nuxt-spearly-cms-module#readme",
+  "homepage": "https://github.com/unimal-jp/spearly-cms-nuxt-module#readme",
   "devDependencies": {
     "@babel/preset-env": "^7.15.0",
     "@nuxtjs/eslint-config-typescript": "^6.0.1",

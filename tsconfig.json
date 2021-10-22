@@ -10,7 +10,7 @@
     "strict": true,
     "skipLibCheck": true,
     "pretty": true,
-    "types": ["@unimal-jp/spearly-sdk-js", "jest"]
+    "types": ["@spearly/sdk-js", "jest"]
   },
   "include": [
     "**/*.ts",
