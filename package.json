@@ -1,6 +1,6 @@
 {
   "name": "@spearly/nuxt-module",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "",
   "main": "dist/cjs/nuxt-module.js",
   "module": "dist/esm/nuxt-module.js",
