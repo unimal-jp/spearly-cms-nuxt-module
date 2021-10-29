@@ -1,3 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SpearlyContentList initialized snapshot 1`] = `<div />`;
+exports[`SpearlyContentList initialized snapshot 1`] = `
+<div
+  class="spearly-content-list"
+>
+  <div />
+</div>
+`;
