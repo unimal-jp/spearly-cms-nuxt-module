@@ -1,127 +1,132 @@
 <template>
   <div>
-    <template v-if="$scopedSlots.default">
-      <slot v-bind="form" :submit="submit" />
+    <template v-if="loading && !isLoaded">
+      <component :is="loading" />
     </template>
     <template v-else>
-      <div v-if="!submitted" class="spearly-form">
-        <h1 class="spearly-form-name">
-          {{ form.name }}
-        </h1>
-        <p class="spearly-form-description">
-          {{ form.description }}
-        </p>
-
-        <p v-if="form.startedAt || form.endedAt" class="spearly-form-period">
-          <span>
-            このフォームの受付期間は{{ formattedDate(form.startedAt) }}〜{{ formattedDate(form.endedAt) }}です。
-          </span>
-        </p>
-
-        <p v-if="error" class="spearly-form-error">
-          <span>フォームを送信できませんでした。内容をご確認の上、再度お試しください。</span>
-        </p>
-
-        <fieldset v-for="field in form.fields" :key="field.identifier">
-          <label :for="['radio', 'checkbox'].includes(field.inputType) ? null : field.identifier">
-            {{ field.name }}
-            <i v-if="field.required">*</i>
-          </label>
-
-          <template v-if="confirm">
-            <p class="spearly-form-answer-confirm">
-              {{
-                Array.isArray(answers[field.identifier])
-                  ? answers[field.identifier].join(', ')
-                  : answers[field.identifier]
-              }}
-            </p>
-          </template>
-          <template v-else-if="field.inputType === 'text'">
-            <input
-              :id="field.identifier"
-              v-model="answers[field.identifier]"
-              :required="field.required"
-              :disabled="!isActive"
-              :aria-describedby="field.description ? `${field.identifier}-description` : null"
-              type="text"
-            />
-          </template>
-          <template v-else-if="field.inputType === 'text_area'">
-            <textarea
-              :id="field.identifier"
-              v-model="answers[field.identifier]"
-              :require="field.required"
-              :disabled="!isActive"
-              :aria-describedby="field.description ? `${field.identifier}-description` : null"
-            />
-          </template>
-          <template v-else-if="field.inputType === 'radio'">
-            <label v-for="(option, i) in field.data.options" :key="i" class="spearly-form-radio">
-              <input
-                v-model="answers[field.identifier]"
-                :name="field.identifier"
-                :value="option"
-                type="radio"
-                :required="field.required"
-                :disabled="!isActive"
-                :aria-describedby="field.description ? `${field.identifier}-description` : null"
-              />
-              <span>{{ option }}</span>
-            </label>
-          </template>
-          <template v-else-if="field.inputType === 'checkbox'">
-            <label v-for="(option, i) in field.data.options" :key="i" class="spearly-form-checkbox">
-              <input
-                v-model="answers[field.identifier]"
-                :name="field.identifier"
-                :value="option"
-                type="checkbox"
-                :required="field.required"
-                :disabled="!isActive"
-                :aria-describedby="field.description ? `${field.identifier}-description` : null"
-              />
-              <span>{{ option }}</span>
-            </label>
-          </template>
-
-          <input
-            v-model="answers._spearly_gotcha"
-            type="text"
-            name="_spearly_gotcha"
-            tabindex="-1"
-            style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden"
-          />
-
-          <p v-if="field.description" :id="`${field.identifier}-description`" class="spearly-form-field-description">
-            {{ field.description }}
+      <template v-if="$scopedSlots.default">
+        <slot v-bind="form" :submit="submit" />
+      </template>
+      <template v-else>
+        <div v-if="!submitted" class="spearly-form">
+          <h1 class="spearly-form-name">
+            {{ form.name }}
+          </h1>
+          <p class="spearly-form-description">
+            {{ form.description }}
           </p>
-        </fieldset>
 
-        <p v-if="!isActive" class="spearly-form-outside">
-          <span>このフォームは現在受付期間外です。</span>
-        </p>
+          <p v-if="form.startedAt || form.endedAt" class="spearly-form-period">
+            <span>
+              このフォームの受付期間は{{ formattedDate(form.startedAt) }}〜{{ formattedDate(form.endedAt) }}です。
+            </span>
+          </p>
 
-        <p v-if="validateError" class="spearly-form-error">
-          <span>入力されていない項目があります。</span>
-        </p>
+          <p v-if="error" class="spearly-form-error">
+            <span>フォームを送信できませんでした。内容をご確認の上、再度お試しください。</span>
+          </p>
 
-        <button :disabled="!isActive" class="spearly-form-submit" @click="onClick">
-          <span>送信</span>
-        </button>
+          <fieldset v-for="field in form.fields" :key="field.identifier">
+            <label :for="['radio', 'checkbox'].includes(field.inputType) ? null : field.identifier">
+              {{ field.name }}
+              <i v-if="field.required">*</i>
+            </label>
 
-        <button v-if="confirm" class="spearly-form-back" @click="confirm = false">
-          <span>戻る</span>
-        </button>
-      </div>
-      <div v-else class="spearly-form-thanks">
-        <h1 class="spearly-form-thanks-title">
-          <span>{{ form.name }}を送信しました。</span>
-        </h1>
-        <p v-if="form.thankYouMessage" class="spearly-form-thanks-message">
-          {{ form.thankYouMessage }}
-        </p>
-      </div>
+            <template v-if="confirm">
+              <p class="spearly-form-answer-confirm">
+                {{
+                  Array.isArray(answers[field.identifier])
+                    ? answers[field.identifier].join(', ')
+                    : answers[field.identifier]
+                }}
+              </p>
+            </template>
+            <template v-else-if="field.inputType === 'text'">
+              <input
+                :id="field.identifier"
+                v-model="answers[field.identifier]"
+                :required="field.required"
+                :disabled="!isActive"
+                :aria-describedby="field.description ? `${field.identifier}-description` : null"
+                type="text"
+              />
+            </template>
+            <template v-else-if="field.inputType === 'text_area'">
+              <textarea
+                :id="field.identifier"
+                v-model="answers[field.identifier]"
+                :require="field.required"
+                :disabled="!isActive"
+                :aria-describedby="field.description ? `${field.identifier}-description` : null"
+              />
+            </template>
+            <template v-else-if="field.inputType === 'radio'">
+              <label v-for="(option, i) in field.data.options" :key="i" class="spearly-form-radio">
+                <input
+                  v-model="answers[field.identifier]"
+                  :name="field.identifier"
+                  :value="option"
+                  type="radio"
+                  :required="field.required"
+                  :disabled="!isActive"
+                  :aria-describedby="field.description ? `${field.identifier}-description` : null"
+                />
+                <span>{{ option }}</span>
+              </label>
+            </template>
+            <template v-else-if="field.inputType === 'checkbox'">
+              <label v-for="(option, i) in field.data.options" :key="i" class="spearly-form-checkbox">
+                <input
+                  v-model="answers[field.identifier]"
+                  :name="field.identifier"
+                  :value="option"
+                  type="checkbox"
+                  :required="field.required"
+                  :disabled="!isActive"
+                  :aria-describedby="field.description ? `${field.identifier}-description` : null"
+                />
+                <span>{{ option }}</span>
+              </label>
+            </template>
+
+            <input
+              v-model="answers._spearly_gotcha"
+              type="text"
+              name="_spearly_gotcha"
+              tabindex="-1"
+              style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden"
+            />
+
+            <p v-if="field.description" :id="`${field.identifier}-description`" class="spearly-form-field-description">
+              {{ field.description }}
+            </p>
+          </fieldset>
+
+          <p v-if="!isActive" class="spearly-form-outside">
+            <span>このフォームは現在受付期間外です。</span>
+          </p>
+
+          <p v-if="validateError" class="spearly-form-error">
+            <span>入力されていない項目があります。</span>
+          </p>
+
+          <button :disabled="!isActive" class="spearly-form-submit" @click="onClick">
+            <span>送信</span>
+          </button>
+
+          <button v-if="confirm" class="spearly-form-back" @click="confirm = false">
+            <span>戻る</span>
+          </button>
+        </div>
+        <div v-else class="spearly-form-thanks">
+          <h1 class="spearly-form-thanks-title">
+            <span>{{ form.name }}を送信しました。</span>
+          </h1>
+          <p v-if="form.thankYouMessage" class="spearly-form-thanks-message">
+            {{ form.thankYouMessage }}
+          </p>
+        </div>
+      </template>
     </template>
   </div>
 </template>
@@ -132,6 +137,7 @@ import { Form } from '@spearly/sdk-js'
 
 export type Props = {
   id: string
+  loading?: string
   noValidate: boolean
 }
 
@@ -144,6 +150,7 @@ export type Data = {
   validateError: boolean
   confirm: boolean
   submitted: boolean
+  isLoaded: boolean
 }
 
 export default Vue.extend<
@@ -164,6 +171,7 @@ export default Vue.extend<
 >({
   props: {
     id: { type: String, required: true },
+    loading: { type: String },
     noValidate: { type: Boolean },
   },
   data() {
@@ -188,11 +196,13 @@ export default Vue.extend<
       validateError: false,
       confirm: false,
       submitted: false,
+      isLoaded: false,
     }
   },
   async fetch() {
     const res = await this.$spearly.getFormLatest(this.id)
     this.form = res
+    this.isLoaded = true
   },
   computed: {
     now() {
@@ -216,6 +226,9 @@ export default Vue.extend<
   },
   mounted() {
     this.setAnswersObj()
+  },
+  beforeDestroy() {
+    this.isLoaded = false
   },
   methods: {
     setAnswersObj() {

@@ -1,7 +1,10 @@
 <template>
   <div>
-    <template v-if="content.publicUid">
-      <slot v-bind="content" />
+    <template v-if="loading && !isLoaded">
+      <component :is="loading" />
+    </template>
+    <template v-else>
+      <slot v-if="content.publicUid" v-bind="content" />
     </template>
   </div>
 </template>
@@ -12,6 +15,7 @@ import { Content } from '@spearly/sdk-js'
 
 export type Props = {
   id: string
+  loading?: string
 }
 
 export type Data = {
@@ -20,11 +24,13 @@ export type Data = {
     updatedAt: Date | null
     publishedAt: Date | null
   } & Omit<Content, 'createdAt' | 'updatedAt' | 'publishedAt'>
+  isLoaded: boolean
 }
 
 export default Vue.extend<Data, unknown, unknown, Props>({
   props: {
     id: { type: String, required: true },
+    loading: { type: [String] },
   },
   data() {
     return {
@@ -36,16 +42,16 @@ export default Vue.extend<Data, unknown, unknown, Props>({
         contentAlias: '',
         fields: {},
       },
+      isLoaded: false,
     }
   },
   async fetch() {
     const res = await this.$spearly.getContent(this.id)
     this.content = res
+    this.isLoaded = true
   },
-  render(createElement) {
-    return createElement('div', [
-      this.$scopedSlots.default && this.content.publicUid ? this.$scopedSlots.default({ ...this.$data.content }) : null,
-    ])
+  destroyed() {
+    this.isLoaded = false
   },
 })
 </script>
