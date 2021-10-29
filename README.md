@@ -1,5 +1,7 @@
 # @spearly/nuxt-module
 
+This package allows you to easily implement Spearly in your nuxt project!
+
 [![Spec Test](https://github.com/unimal-jp/spearly-cms-nuxt-module/actions/workflows/spec.yml/badge.svg)](https://github.com/unimal-jp/spearly-cms-nuxt-module/actions/workflows/spec.yml)
 
 ## Getting Started
