@@ -1,9 +1,14 @@
 <template>
-  <component :is="wrapper">
-    <component :is="item" v-for="content in contents" :key="content.publicUid">
-      <slot :content="content" />
+  <div class="spearly-content-list">
+    <template v-if="loading && !isLoaded">
+      <component :is="loading" />
+    </template>
+    <component :is="wrapper" v-else>
+      <component :is="item" v-for="content in contents" :key="content.publicUid">
+        <slot :content="content" />
+      </component>
     </component>
-  </component>
+  </div>
 </template>
 
 <script lang="ts">
@@ -14,10 +19,15 @@ export type Props = {
   id: string
   order?: string
   orderBy?: string
-  wrapper?: string | Vue
-  item?: string | Vue
+  wrapper?: string
+  item?: string
+  loading?: string
 } & Omit<GetParams, 'order' | 'orderBy' | 'orderDirection'>
-export type Data = { contents: Content[] }
+
+export type Data = {
+  contents: Content[]
+  isLoaded: boolean
+}
 
 export default Vue.extend<Data, unknown, unknown, Props>({
   props: {
@@ -31,12 +41,14 @@ export default Vue.extend<Data, unknown, unknown, Props>({
     filterRef: { type: String },
     rangeFrom: { type: Date },
     rangeTo: { type: Date },
-    wrapper: { type: String, default: 'div' },
-    item: { type: String, default: 'div' },
+    wrapper: { type: [String], default: 'div' },
+    item: { type: [String], default: 'div' },
+    loading: { type: [String] },
   },
   data() {
     return {
       contents: [],
+      isLoaded: false,
     }
   },
   async fetch() {
@@ -52,6 +64,10 @@ export default Vue.extend<Data, unknown, unknown, Props>({
     if (this.rangeTo) params.rangeTo = this.rangeTo
     const res = await this.$spearly.getList(this.id, Object.keys(params).length ? params : undefined)
     this.contents = res.contents
+    this.isLoaded = true
+  },
+  beforeDestroy() {
+    this.isLoaded = false
   },
 })
 </script>

@@ -63,6 +63,54 @@ export default {}
 </script>
 ```
 
+#### use Custom Components
+
+- Make the wrapper its custom component: Specify a component name for `wrapper` prop.
+- Make the items its custom component: Specify a component name for `item` prop.
+
+```vue
+<template>
+  <spearly-content-list wrapper="Wrapper" item="ListItem" id="CONTENT_TYPE_ID">
+      <template v-slot="item">
+        <nuxt-link :to="`/${item.content.publicUid}`">
+          {{ item.content.fields.title.value }}
+        </nuxt-link>
+      </template>
+    </spearly-content-list>
+</template>
+
+<script>
+import Wrapper from '../components/Wrapper.vue'
+import ListItem from '../components/ListItem.vue'
+export default {
+  components: { Wrapper, ListItem }
+}
+</script>
+```
+
+#### use Show Loading
+
+Specify a component name for `loading` prop.
+
+```vue
+<template>
+  <spearly-content-list loading="Loading" id="CONTENT_TYPE_ID">
+      <template v-slot="item">
+        <nuxt-link :to="`/${item.content.publicUid}`">
+          {{ item.content.fields.title.value }}
+        </nuxt-link>
+      </template>
+    </spearly-content-list>
+</template>
+
+<script>
+import Loading from '../components/Loading.vue'
+export default {
+  components: { Loading }
+}
+</script>
+```
+
 #### Advanced props
 
 - `limit` (number, 10)
@@ -74,8 +122,9 @@ export default {}
 - `filter_ref` (string)
 - `range_to` (string)
 - `range_from` (string)
-- `wrapper` (string)
-- `item` (string)
+- `wrapper` (string | Vue)
+- `item` (string | Vue)
+- `loading` (Vue)
 
 ### Content
 
@@ -93,6 +142,30 @@ export default {}
 
 <script>
 export default {}
+</script>
+```
+
+#### use Show Loading
+
+Specify a component name for `loading` prop.
+
+```vue
+<template>
+  <spearly-content loading="Loading" id="CONTENT_PUBLIC_UID">
+    <template v-slot="content">
+      <header>
+        <h1>{{ content.fields.title.value }}</h1>
+      </header>
+      <div v-html="content.fields.body.value" />
+    </template>
+  </spearly-content>
+</template>
+
+<script>
+import Loading from '../components/Loading.vue'
+export default {
+  components: { Loading }
+}
 </script>
 ```
 
@@ -146,6 +219,22 @@ export default {
       }
     }
   }
+}
+</script>
+```
+
+#### use Show Loading
+
+Specify a component name for `loading` prop.
+
+```vue
+<template>
+  <spearly-form loading="Loading" id="FORM_ID" />
+</template>
+<script>
+import Loading from '../components/Loading.vue'
+export default {
+  components: { Loading }
 }
 </script>
 ```
