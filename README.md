@@ -171,6 +171,27 @@ export default {
 </script>
 ```
 
+#### show Preview
+
+You can preview the draft content by specifying `preview_token` and `id`.
+
+```vue
+<template>
+  <spearly-content :id="$route.query.content_id" :preview_token="$route.query.preview_token">
+    <template v-slot="content">
+      <header>
+        <h1>{{ content.fields.title.value }}</h1>
+      </header>
+      <div v-html="content.fields.body.value" />
+    </template>
+  </spearly-content>
+</template>
+
+<script>
+export default {}
+</script>
+```
+
 ### Form
 
 ```vue

@@ -15,6 +15,7 @@ import { Content } from '@spearly/sdk-js'
 
 export type Props = {
   id: string
+  previewToken?: string
   loading?: string
 }
 
@@ -30,7 +31,8 @@ export type Data = {
 export default Vue.extend<Data, unknown, unknown, Props>({
   props: {
     id: { type: String, required: true },
-    loading: { type: [String] },
+    loading: { type: String },
+    previewToken: { type: String },
   },
   data() {
     return {
@@ -46,9 +48,15 @@ export default Vue.extend<Data, unknown, unknown, Props>({
     }
   },
   async fetch() {
-    const res = await this.$spearly.getContent(this.id)
-    this.content = res
-    this.isLoaded = true
+    if (!this.previewToken) {
+      const res = await this.$spearly.getContent(this.id)
+      this.content = res
+      this.isLoaded = true
+    } else {
+      const res = await this.$spearly.getContentPreview(this.id, this.previewToken)
+      this.content = res
+      this.isLoaded = true
+    }
   },
   destroyed() {
     this.isLoaded = false
