@@ -128,6 +128,37 @@ export default {
 - `item` (string | Vue)
 - `loading` (Vue)
 
+#### pager slot
+
+The `pager` slot is a slot for creating paginations.
+Since the `pager slot has a `paging` scope, you can freely create paginations with it.
+
+- `limit` (number) : The same number as the limit property for the component
+- `offset` (number) : The same number as the offset property for the component
+- `next` (number) : Indicates the number of offsets on the next page
+- `matchingContentsCount` (number) : Indicates the total number of articles narrowed down by filters, etc
+- `totalContentsCount` (number) : Indicates the total number of articles registered for the content type
+
+```vue
+<template>
+  <spearly-content-list id="CONTENT_TYPE_ID">
+      <template v-slot="item">
+        <nuxt-link :to="`/${item.content.publicUid}`">
+          {{ item.content.fields.title.value }}
+        </nuxt-link>
+      </template>
+      <template #paging="data">
+        <button v-if="data.paging.offset > 0" @click="offset -= 10">Previous</button>
+        <button v-if="data.paging.next > 0" @click="offset += 10">Next</button>
+      </template>
+    </spearly-content-list>
+</template>
+
+<script>
+export default {}
+</script>
+```
+
 ### Content
 
 ```vue

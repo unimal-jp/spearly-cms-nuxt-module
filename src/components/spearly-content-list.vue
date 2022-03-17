@@ -8,6 +8,8 @@
         <slot :content="content" />
       </component>
     </component>
+
+    <slot name="pager" :paging="paging" />
   </div>
 </template>
 
@@ -27,6 +29,9 @@ export type Props = {
 export type Data = {
   contents: Content[]
   isLoaded: boolean
+  next: number
+  matchingContentsCount: number
+  totalContentsCount: number
 }
 
 export default Vue.extend<Data, unknown, unknown, Props>({
@@ -49,6 +54,9 @@ export default Vue.extend<Data, unknown, unknown, Props>({
     return {
       contents: [],
       isLoaded: false,
+      next: 0,
+      matchingContentsCount: 0,
+      totalContentsCount: 0,
     }
   },
   async fetch() {
@@ -65,6 +73,49 @@ export default Vue.extend<Data, unknown, unknown, Props>({
     const res = await this.$spearly.getList(this.id, Object.keys(params).length ? params : undefined)
     this.contents = res.contents
     this.isLoaded = true
+    this.next = res.next
+    this.matchingContentsCount = res.matchingContentsCount
+    this.totalContentsCount = res.totalContentsCount
+  },
+  computed: {
+    paging() {
+      return {
+        limit: this.limit,
+        offset: this.offset,
+        next: this.next,
+        matchingContentsCount: this.matchingContentsCount,
+        totalContentsCount: this.totalContentsCount,
+      }
+    },
+  },
+  watch: {
+    limit() {
+      this.$fetch()
+    },
+    offset() {
+      this.$fetch()
+    },
+    order() {
+      this.$fetch()
+    },
+    orderBy() {
+      this.$fetch()
+    },
+    filterBy() {
+      this.$fetch()
+    },
+    filterValue() {
+      this.$fetch()
+    },
+    filterRef() {
+      this.$fetch()
+    },
+    rangeFrom() {
+      this.$fetch()
+    },
+    rangeTo() {
+      this.$fetch()
+    },
   },
   beforeDestroy() {
     this.isLoaded = false
