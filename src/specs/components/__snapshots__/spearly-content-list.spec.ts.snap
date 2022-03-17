@@ -5,5 +5,6 @@ exports[`SpearlyContentList initialized snapshot 1`] = `
   class="spearly-content-list"
 >
   <div />
+   
 </div>
 `;
