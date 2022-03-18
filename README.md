@@ -147,7 +147,7 @@ Since the `pager slot has a `paging` scope, you can freely create paginations wi
           {{ item.content.fields.title.value }}
         </nuxt-link>
       </template>
-      <template #paging="data">
+      <template #pager="data">
         <button v-if="data.paging.offset > 0" @click="offset -= 10">Previous</button>
         <button v-if="data.paging.next > 0" @click="offset += 10">Next</button>
       </template>
