@@ -4,7 +4,7 @@
       <component :is="loading" />
     </template>
     <template v-else>
-      <slot v-if="content.publicUid" v-bind="content" />
+      <slot v-if="content.id" v-bind="content" />
     </template>
   </div>
 </template>
@@ -21,10 +21,12 @@ export type Props = {
 
 export type Data = {
   content: {
-    createdAt: Date | null
-    updatedAt: Date | null
-    publishedAt: Date | null
-  } & Omit<Content, 'createdAt' | 'updatedAt' | 'publishedAt'>
+    attributes: {
+      createdAt: Date | null
+      updatedAt: Date | null
+      publishedAt: Date | null
+    } & Omit<Content['attributes'], 'createdAt' | 'updatedAt' | 'publishedAt'>
+  } & Omit<Content, 'attributes'>
   isLoaded: boolean
 }
 
@@ -37,23 +39,32 @@ export default Vue.extend<Data, unknown, unknown, Props>({
   data() {
     return {
       content: {
-        publicUid: '',
-        createdAt: null,
-        updatedAt: null,
-        publishedAt: null,
-        contentAlias: '',
-        fields: {},
+        attributes: {
+          publicUid: '',
+          createdAt: null,
+          updatedAt: null,
+          publishedAt: null,
+          contentAlias: '',
+          fields: {
+            data: [],
+          },
+          nextContent: null,
+          previousContent: null,
+        },
+        id: '',
+        type: 'content',
+        values: {},
       },
       isLoaded: false,
     }
   },
   async fetch() {
-    if (!this.previewToken) {
-      const res = await this.$spearly.getContent(this.id)
+    if (!this.$props.previewToken) {
+      const res = await this.$spearly.getContent(this.$props.id)
       this.content = res
       this.isLoaded = true
     } else {
-      const res = await this.$spearly.getContentPreview(this.id, this.previewToken)
+      const res = await this.$spearly.getContentPreview(this.$props.id, this.$props.previewToken)
       this.content = res
       this.isLoaded = true
     }

@@ -71,7 +71,7 @@ export default Vue.extend<Data, unknown, unknown, Props>({
     if (this.rangeFrom) params.rangeFrom = this.rangeFrom
     if (this.rangeTo) params.rangeTo = this.rangeTo
     const res = await this.$spearly.getList(this.id, Object.keys(params).length ? params : undefined)
-    this.contents = res.contents
+    this.contents = res.data
     this.isLoaded = true
     this.next = res.next
     this.matchingContentsCount = res.matchingContentsCount
