@@ -54,7 +54,7 @@ export default {
   <spearly-content-list id="CONTENT_TYPE_ID">
       <template v-slot="item">
         <nuxt-link :to="`/${item.content.publicUid}`">
-          {{ item.content.fields.title.value }}
+          {{ item.content.values.title }}
         </nuxt-link>
       </template>
     </spearly-content-list>
@@ -75,7 +75,7 @@ export default {}
   <spearly-content-list wrapper="Wrapper" item="ListItem" id="CONTENT_TYPE_ID">
       <template v-slot="item">
         <nuxt-link :to="`/${item.content.publicUid}`">
-          {{ item.content.fields.title.value }}
+          {{ item.content.values.title }}
         </nuxt-link>
       </template>
     </spearly-content-list>
@@ -99,7 +99,7 @@ Specify a component name for `loading` prop.
   <spearly-content-list loading="Loading" id="CONTENT_TYPE_ID">
       <template v-slot="item">
         <nuxt-link :to="`/${item.content.publicUid}`">
-          {{ item.content.fields.title.value }}
+          {{ item.content.values.title }}
         </nuxt-link>
       </template>
     </spearly-content-list>
@@ -143,8 +143,8 @@ Since the `pager slot has a `paging` scope, you can freely create paginations wi
 <template>
   <spearly-content-list id="CONTENT_TYPE_ID">
       <template v-slot="item">
-        <nuxt-link :to="`/${item.content.publicUid}`">
-          {{ item.content.fields.title.value }}
+        <nuxt-link :to="`/${item.content.attributes.publicUid}`">
+          {{ item.content.values.title }}
         </nuxt-link>
       </template>
       <template #pager="data">
@@ -166,9 +166,9 @@ export default {}
   <spearly-content id="CONTENT_PUBLIC_UID">
     <template v-slot="content">
       <header>
-        <h1>{{ content.fields.title.value }}</h1>
+        <h1>{{ content.values.title }}</h1>
       </header>
-      <div v-html="content.fields.body.value" />
+      <div v-html="content.values.body" />
     </template>
   </spearly-content>
 </template>
@@ -187,9 +187,9 @@ Specify a component name for `loading` prop.
   <spearly-content loading="Loading" id="CONTENT_PUBLIC_UID">
     <template v-slot="content">
       <header>
-        <h1>{{ content.fields.title.value }}</h1>
+        <h1>{{ content.values.title }}</h1>
       </header>
-      <div v-html="content.fields.body.value" />
+      <div v-html="content.values.body" />
     </template>
   </spearly-content>
 </template>
@@ -211,9 +211,9 @@ You can preview the draft content by specifying `preview_token` and `id`.
   <spearly-content :id="$route.query.content_id" :preview_token="$route.query.preview_token">
     <template v-slot="content">
       <header>
-        <h1>{{ content.fields.title.value }}</h1>
+        <h1>{{ content.values.title }}</h1>
       </header>
-      <div v-html="content.fields.body.value" />
+      <div v-html="content.values.body" />
     </template>
   </spearly-content>
 </template>

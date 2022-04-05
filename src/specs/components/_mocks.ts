@@ -1,29 +1,42 @@
 import { List, Content, Form } from '@spearly/sdk-js'
 
 export const createContentMock = (index = 0): Content => ({
-  publicUid: `content_${index}`,
-  createdAt: new Date('2021-08-01'),
-  updatedAt: new Date('2021-08-01'),
-  publishedAt: new Date('2021-08-01'),
-  contentAlias: `content_${index}`,
-  fields: {
-    test: {
-      inputType: 'text',
-      value: `text ${index}`,
+  attributes: {
+    publicUid: `content_${index}`,
+    createdAt: new Date('2021-08-01'),
+    updatedAt: new Date('2021-08-01'),
+    publishedAt: new Date('2021-08-01'),
+    nextContent: null,
+    previousContent: null,
+    contentAlias: `content_${index}`,
+    fields: {
+      data: [
+        {
+          attributes: {
+            identifier: 'test',
+            inputType: 'text',
+            value: `text ${index}`,
+          },
+          id: '1',
+          type: 'field',
+        },
+      ],
     },
+  },
+  id: '1',
+  type: 'content',
+  values: {
+    test: `text ${index}`,
   },
 })
 
 export const createContentListMock = (length = 10): List => ({
-  name: 'test',
-  identifier: 'test',
-  publicUid: 'test',
   totalContentsCount: 100,
   matchingContentsCount: 90,
   limit: length,
   offset: 0,
   next: length,
-  contents: Array(length).map((_, i) => createContentMock(i)),
+  data: Array(length).map((_, i) => createContentMock(i)),
 })
 
 export const createFormMock = (startedAt: Date | null = null, endedAt: Date | null = null): Form => ({
