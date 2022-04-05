@@ -53,7 +53,7 @@ export default {
 <template>
   <spearly-content-list id="CONTENT_TYPE_ID">
       <template v-slot="item">
-        <nuxt-link :to="`/${item.content.publicUid}`">
+        <nuxt-link :to="`/${item.content.attributes.publicUid}`">
           {{ item.content.values.title }}
         </nuxt-link>
       </template>
@@ -74,7 +74,7 @@ export default {}
 <template>
   <spearly-content-list wrapper="Wrapper" item="ListItem" id="CONTENT_TYPE_ID">
       <template v-slot="item">
-        <nuxt-link :to="`/${item.content.publicUid}`">
+        <nuxt-link :to="`/${item.content.attributes.publicUid}`">
           {{ item.content.values.title }}
         </nuxt-link>
       </template>
@@ -98,7 +98,7 @@ Specify a component name for `loading` prop.
 <template>
   <spearly-content-list loading="Loading" id="CONTENT_TYPE_ID">
       <template v-slot="item">
-        <nuxt-link :to="`/${item.content.publicUid}`">
+        <nuxt-link :to="`/${item.content.attributes.publicUid}`">
           {{ item.content.values.title }}
         </nuxt-link>
       </template>
