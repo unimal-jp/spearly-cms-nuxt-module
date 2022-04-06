@@ -1,15 +1,26 @@
 {
   "name": "@spearly/nuxt-module",
   "version": "0.4.1",
-  "description": "This package allows you to easily implement Spearly in your nuxt project!",
-  "main": "dist/cjs/nuxt-module.js",
-  "module": "dist/esm/nuxt-module.js",
-  "unpkg": "dist/umd/nuxt-module.js",
-  "types": "types/index.d.ts",
+  "description": "This package allows you to easily implement Spearly in your nuxt3 project!",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/module.mjs",
+      "require": "./dist/module.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/module.cjs",
+  "module": "./dist/module.mjs",
+  "types": "./dist/types.d.ts",
+  "files": [
+    "dist",
+    "types/index.d.ts"
+  ],
   "scripts": {
     "lint": "eslint --ext .ts,.tsx,.vue --ignore-path .eslintignore . || exit 0",
     "test": "jest --config ./jest.config.js",
-    "build": "rollup -c",
+    "build": "nuxt-module-build",
     "prepare": "husky install"
   },
   "repository": {
@@ -24,10 +35,6 @@
   "bugs": {
     "url": "https://github.com/unimal-jp/spearly-cms-nuxt-module/issues"
   },
-  "files": [
-    "dist",
-    "types/index.d.ts"
-  ],
   "homepage": "https://github.com/unimal-jp/spearly-cms-nuxt-module#readme",
   "devDependencies": {
     "@babel/preset-env": "^7.15.0",
