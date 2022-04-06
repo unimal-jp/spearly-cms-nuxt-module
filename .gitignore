@@ -3,7 +3,8 @@ logs
 npm-debug.log*
 node_modules
 dist
-.nuxt
+.nuxt/*
+!.nuxt/tsconfig.json
 .vscode
 .env
 .cache
