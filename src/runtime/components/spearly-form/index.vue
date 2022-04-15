@@ -139,7 +139,7 @@ const nuxtApp = useNuxtApp()
 
 const props = defineProps({
   id: { type: String, required: true },
-  loading: { type: String },
+  loading: { type: [String, Object] },
   noValidate: { type: Boolean },
 })
 
