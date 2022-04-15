@@ -14,8 +14,7 @@
   "module": "./dist/module.mjs",
   "types": "./dist/types.d.ts",
   "files": [
-    "dist",
-    "types/index.d.ts"
+    "dist"
   ],
   "scripts": {
     "lint": "eslint --ext .ts,.tsx,.vue --ignore-path .eslintignore . || exit 0",

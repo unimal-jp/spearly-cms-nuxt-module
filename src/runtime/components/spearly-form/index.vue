@@ -173,6 +173,8 @@ watch(state.form.fields, () => {
 
 const now = computed(() => new Date().getTime())
 const identifiers = computed(() => state.form.fields.map((field) => field.identifier))
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const isActive = computed(() => {
   if (!state.form.startedAt && !state.form.endedAt) return true
   if (state.form.startedAt && state.form.startedAt.getTime() > now.value) return false
@@ -197,6 +199,7 @@ const setAnswersObj = () => {
   })
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const formattedDate = (date: Date) => {
   if (!date) return ''
   const y = date.getFullYear()
@@ -236,6 +239,7 @@ const submit = async (fields: { [key: string]: unknown } & { _spearly_gotcha: st
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const onClick = () => {
   if (!state.confirm) {
     if (!validate()) {
