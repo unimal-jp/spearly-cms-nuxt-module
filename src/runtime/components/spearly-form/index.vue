@@ -1,0 +1,257 @@
+<template>
+  <div>
+    <template v-if="loading && !state.isLoaded">
+      <component :is="loading" />
+    </template>
+    <template v-else>
+      <slot v-bind="state.form" :submit="submit">
+        <div v-if="!state.submitted" class="spearly-form">
+          <h1 class="spearly-form-name">
+            {{ state.form.name }}
+          </h1>
+          <p class="spearly-form-description">
+            {{ state.form.description }}
+          </p>
+
+          <p v-if="state.form.startedAt || state.form.endedAt" class="spearly-form-period">
+            <span>
+              このフォームの受付期間は{{ formattedDate(state.form.startedAt) }}〜{{
+                formattedDate(state.form.endedAt)
+              }}です。
+            </span>
+          </p>
+
+          <p v-if="state.error" class="spearly-form-error">
+            <span>フォームを送信できませんでした。内容をご確認の上、再度お試しください。</span>
+          </p>
+
+          <fieldset v-for="field in state.form.fields" :key="field.identifier">
+            <label :for="['radio', 'checkbox'].includes(field.inputType) ? null : field.identifier">
+              {{ field.name }}
+              <i v-if="field.required">*</i>
+            </label>
+
+            <template v-if="state.confirm">
+              <p class="spearly-form-answer-confirm">
+                {{
+                  Array.isArray(state.answers[field.identifier])
+                    ? (state.answers[field.identifier] as string[]).join(', ')
+                    : state.answers[field.identifier]
+                }}
+              </p>
+            </template>
+            <template v-else-if="field.inputType === 'text'">
+              <input
+                :id="field.identifier"
+                v-model="state.answers[field.identifier]"
+                :required="field.required"
+                :disabled="!isActive"
+                :aria-describedby="field.description ? `${field.identifier}-description` : null"
+                type="text"
+              />
+            </template>
+            <template v-else-if="field.inputType === 'text_area'">
+              <textarea
+                :id="field.identifier"
+                v-model="state.answers[field.identifier]"
+                :require="field.required"
+                :disabled="!isActive"
+                :aria-describedby="field.description ? `${field.identifier}-description` : null"
+              />
+            </template>
+            <template v-else-if="field.inputType === 'radio'">
+              <label v-for="(option, i) in field.data.options" :key="i" class="spearly-form-radio">
+                <input
+                  v-model="state.answers[field.identifier]"
+                  :name="field.identifier"
+                  :value="option"
+                  type="radio"
+                  :required="field.required"
+                  :disabled="!isActive"
+                  :aria-describedby="field.description ? `${field.identifier}-description` : null"
+                />
+                <span>{{ option }}</span>
+              </label>
+            </template>
+            <template v-else-if="field.inputType === 'checkbox'">
+              <label v-for="(option, i) in field.data.options" :key="i" class="spearly-form-checkbox">
+                <input
+                  v-model="(state.answers[field.identifier] as any[])"
+                  :name="field.identifier"
+                  :value="option"
+                  type="checkbox"
+                  :required="field.required"
+                  :disabled="!isActive"
+                  :aria-describedby="field.description ? `${field.identifier}-description` : null"
+                />
+                <span>{{ option }}</span>
+              </label>
+            </template>
+
+            <input
+              v-model="state.answers._spearly_gotcha"
+              type="text"
+              name="_spearly_gotcha"
+              tabindex="-1"
+              style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden"
+            />
+
+            <p v-if="field.description" :id="`${field.identifier}-description`" class="spearly-form-field-description">
+              {{ field.description }}
+            </p>
+          </fieldset>
+
+          <p v-if="!isActive" class="spearly-form-outside">
+            <span>このフォームは現在受付期間外です。</span>
+          </p>
+
+          <p v-if="state.validateError" class="spearly-form-error">
+            <span>入力されていない項目があります。</span>
+          </p>
+
+          <button :disabled="!isActive" class="spearly-form-submit" @click="onClick">
+            <span>送信</span>
+          </button>
+
+          <button v-if="state.confirm" class="spearly-form-back" @click="state.confirm = false">
+            <span>戻る</span>
+          </button>
+        </div>
+        <div v-else class="spearly-form-thanks">
+          <h1 class="spearly-form-thanks-title">
+            <span>{{ state.form.name }}を送信しました。</span>
+          </h1>
+          <p v-if="state.form.thankYouMessage" class="spearly-form-thanks-message">
+            {{ state.form.thankYouMessage }}
+          </p>
+        </div>
+      </slot>
+    </template>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { reactive, computed, watch, onMounted } from 'vue'
+import { useNuxtApp } from '#app'
+import { SpearlyFormState } from './types'
+
+const nuxtApp = useNuxtApp()
+
+const props = defineProps({
+  id: { type: String, required: true },
+  loading: { type: String },
+  noValidate: { type: Boolean },
+})
+
+const state = reactive<SpearlyFormState>({
+  form: {
+    id: 0,
+    publicUid: '',
+    identifier: '',
+    name: '',
+    description: '',
+    thankYouMessage: '',
+    fields: [],
+    callbackUrl: '',
+    startedAt: null,
+    endedAt: null,
+    createdAt: null,
+  },
+  answers: {
+    _spearly_gotcha: '',
+  },
+  error: false,
+  validateError: false,
+  confirm: false,
+  submitted: false,
+  isLoaded: false,
+})
+
+watch(state.form.fields, () => {
+  setAnswersObj()
+})
+
+const now = computed(() => new Date().getTime())
+const identifiers = computed(() => state.form.fields.map((field) => field.identifier))
+const isActive = computed(() => {
+  if (!state.form.startedAt && !state.form.endedAt) return true
+  if (state.form.startedAt && state.form.startedAt.getTime() > now.value) return false
+  if (state.form.endedAt && state.form.endedAt.getTime() < now.value) return false
+  return true
+})
+
+const fetchFormLatest = async () => {
+  try {
+    const res = await nuxtApp.vueApp._context.provides.$spearly.getFormLatest(props.id)
+    state.form = res
+  } catch (error) {
+    console.error(error)
+  } finally {
+    state.isLoaded = true
+  }
+}
+
+const setAnswersObj = () => {
+  state.form.fields.forEach((field) => {
+    state.answers[field.identifier] = field.inputType === 'checkbox' && field.data?.options.length ? [] : ''
+  })
+}
+
+const formattedDate = (date: Date) => {
+  if (!date) return ''
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  const h = String(date.getHours()).padStart(2, '0')
+  const mi = String(date.getMinutes()).padStart(2, '0')
+  return `${y}/${m}/${d} ${h}:${mi}`
+}
+
+const validate = () => {
+  const requiredFieldIds: string[] = state.form.fields
+    .filter((field) => field.required)
+    .map((field) => field.identifier)
+  return requiredFieldIds.every((identifier) => {
+    return !!state.answers[identifier]
+  })
+}
+
+const submit = async (fields: { [key: string]: unknown } & { _spearly_gotcha: string }) => {
+  try {
+    await nuxtApp.vueApp._context.provides.$spearly.postFormAnswers(state.form.id, fields)
+
+    identifiers.value.forEach((identifier) => {
+      state.answers[identifier] =
+        state.form.fields.find((field) => field.identifier === identifier)?.inputType === 'checkbox' ? [] : ''
+    })
+
+    if (typeof location !== 'undefined' && state.form.callbackUrl) {
+      location.href = state.form.callbackUrl
+    } else {
+      state.submitted = true
+    }
+  } catch {
+    state.error = true
+    state.confirm = false
+  }
+}
+
+const onClick = () => {
+  if (!state.confirm) {
+    if (!validate()) {
+      state.validateError = true
+      return
+    }
+    state.validateError = false
+    state.confirm = true
+    return
+  }
+  submit(state.answers)
+}
+
+onMounted(() => {
+  setAnswersObj()
+})
+
+await fetchFormLatest()
+</script>

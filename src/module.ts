@@ -1,35 +1,33 @@
-import path from 'path'
-import { Module } from '@nuxt/types'
+import { defineNuxtModule, createResolver, addPlugin, addComponent } from '@nuxt/kit'
+import { SpearlyNuxtModuleOptions } from './types'
 
-export type ModuleConfig = {
-  apiKey: string
-}
+export default defineNuxtModule<SpearlyNuxtModuleOptions>({
+  meta: {
+    name: '@spearly/nuxt-module',
+    configKey: 'spearlyNuxtModule',
+  },
+  async setup(options, nuxt) {
+    nuxt.options.publicRuntimeConfig.spearly = {
+      apiKey: options.apiKey,
+    }
 
-export type ModuleOptions = {
-  fileName?: string
-  mode?: 'all' | 'server' | 'client'
-  options: ModuleConfig
-}
+    const resolver = createResolver(import.meta.url)
 
-export type Package = {
-  name: string
-  version: string
-  description: string
-  main: string
-  license: string
-}
+    addPlugin({ src: resolver.resolve('runtime/plugin.mjs') })
 
-export interface SpearlyModule<T> extends Module<T> {
-  meta: Package
-}
-
-const spearlyModule: SpearlyModule<ModuleOptions> = function (this, moduleOptions) {
-  const options = { ...this.options.spearly, ...moduleOptions }
-  this.addPlugin({
-    src: path.resolve(__dirname, './plugin.js'),
-    options,
-  })
-}
-spearlyModule.meta = require('../../package.json')
-
-export default spearlyModule
+    await Promise.all([
+      addComponent({
+        name: 'spearly-content-list',
+        filePath: resolver.resolve('runtime/components/spearly-content-list/index.vue'),
+      }),
+      addComponent({
+        name: 'spearly-content',
+        filePath: resolver.resolve('runtime/components/spearly-content/index.vue'),
+      }),
+      addComponent({
+        name: 'spearly-form',
+        filePath: resolver.resolve('runtime/components/spearly-form/index.vue'),
+      }),
+    ])
+  },
+})
