@@ -118,12 +118,12 @@ export default {
 - `limit` (number, 10)
 - `offset` (number, 0)
 - `order` ('desc' | 'asc', 'desc')
-- `order_by` ('latest' | 'popular' | string)
-- `filter_by` (string)
-- `filter_value` (string)
-- `filter_ref` (string)
-- `range_to` (string)
-- `range_from` (string)
+- `order-by` ('latest' | 'popular' | string)
+- `filter-by` (string)
+- `filter-value` (string)
+- `filter-ref` (string)
+- `range-to` (string)
+- `range-from` (string)
 - `wrapper` (string | Vue)
 - `item` (string | Vue)
 - `loading` (Vue)
@@ -204,11 +204,11 @@ export default {
 
 #### show Preview
 
-You can preview the draft content by specifying `preview_token` and `id`.
+You can preview the draft content by specifying `preview-token` and `id`.
 
 ```vue
 <template>
-  <spearly-content :id="$route.query.content_id" :preview_token="$route.query.preview_token">
+  <spearly-content :id="$route.query.content_id" :preview-token="$route.query.preview_token">
     <template v-slot="content">
       <header>
         <h1>{{ content.values.title }}</h1>
