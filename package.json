@@ -19,7 +19,7 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "author": "",
+  "author": "akoarum",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/unimal-jp/spearly-cms-nuxt-module/issues"
@@ -29,6 +29,15 @@
     "types/index.d.ts"
   ],
   "homepage": "https://github.com/unimal-jp/spearly-cms-nuxt-module#readme",
+  "keywords": [
+    "spearly",
+    "spearlycms",
+    "headless",
+    "cms",
+    "nuxt",
+    "module",
+    "nuxt-module"
+  ],
   "devDependencies": {
     "@babel/preset-env": "^7.15.0",
     "@nuxtjs/eslint-config-typescript": "^6.0.1",
