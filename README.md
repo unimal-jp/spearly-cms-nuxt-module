@@ -10,10 +10,10 @@ This package allows you to easily implement Spearly in your nuxt project!
 
 ```
 // npm
-$ npm i -S @spearly/nuxt-module@^1.0.0-next.0
+$ npm i -S @spearly/nuxt-module@^1.0.0-next.1
 
 // yarn
-$ yarn add @spearly/nuxt-module@^1.0.0-next.0
+$ yarn add @spearly/nuxt-module@^1.0.0-next.1
 ```
 
 ### Setup
@@ -89,12 +89,12 @@ import Loading from '../components/Loading.vue'
 - `limit` (number, 10)
 - `offset` (number, 0)
 - `order` ('desc' | 'asc', 'desc')
-- `order_by` ('latest' | 'popular' | string)
-- `filter_by` (string)
-- `filter_value` (string)
-- `filter_ref` (string)
-- `range_to` (string)
-- `range_from` (string)
+- `order-by` ('latest' | 'popular' | string)
+- `filter-by` (string)
+- `filter-value` (string)
+- `filter-ref` (string)
+- `range-to` (string)
+- `range-from` (string)
 - `wrapper` (string | Vue)
 - `item` (string | Vue)
 - `loading` (Vue)
@@ -164,11 +164,11 @@ import Loading from '../components/Loading.vue'
 
 #### show Preview
 
-You can preview the draft content by specifying `preview_token` and `id`.
+You can preview the draft content by specifying `preview-token` and `id`.
 
 ```vue
 <template>
-  <spearly-content :id="$route.query.content_id" :preview_token="$route.query.preview_token">
+  <spearly-content :id="$route.query.content_id" :preview-token="$route.query.preview_token">
     <template v-slot="content">
       <header>
         <h1>{{ content.values.title }}</h1>
