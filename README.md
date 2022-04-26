@@ -4,6 +4,10 @@ This package allows you to easily implement Spearly in your nuxt project!
 
 [![Spec Test](https://github.com/unimal-jp/spearly-cms-nuxt-module/actions/workflows/spec.yml/badge.svg)](https://github.com/unimal-jp/spearly-cms-nuxt-module/actions/workflows/spec.yml)
 
+## If you are using nuxt3
+
+Please see [nuxt3-version branch](https://github.com/unimal-jp/spearly-cms-nuxt-module/tree/nuxt3-version).
+
 ## Getting Started
 
 ### Install
@@ -15,6 +19,8 @@ $ npm i -S @spearly/nuxt-module
 // yarn
 $ yarn add @spearly/nuxt-module
 ```
+
+#### 
 
 ### Setup
 
@@ -82,11 +88,7 @@ export default {}
 </template>
 
 <script>
-import Wrapper from '../components/Wrapper.vue'
-import ListItem from '../components/ListItem.vue'
-export default {
-  components: { Wrapper, ListItem }
-}
+export default {}
 </script>
 ```
 
@@ -106,10 +108,7 @@ Specify a component name for `loading` prop.
 </template>
 
 <script>
-import Loading from '../components/Loading.vue'
-export default {
-  components: { Loading }
-}
+export default {}
 </script>
 ```
 
@@ -195,10 +194,7 @@ Specify a component name for `loading` prop.
 </template>
 
 <script>
-import Loading from '../components/Loading.vue'
-export default {
-  components: { Loading }
-}
+export default {}
 </script>
 ```
 
@@ -285,10 +281,8 @@ Specify a component name for `loading` prop.
 <template>
   <spearly-form loading="Loading" id="FORM_ID" />
 </template>
+
 <script>
-import Loading from '../components/Loading.vue'
-export default {
-  components: { Loading }
-}
+export default {}
 </script>
 ```
