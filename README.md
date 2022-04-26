@@ -82,11 +82,7 @@ export default {}
 </template>
 
 <script>
-import Wrapper from '../components/Wrapper.vue'
-import ListItem from '../components/ListItem.vue'
-export default {
-  components: { Wrapper, ListItem }
-}
+export default {}
 </script>
 ```
 
@@ -106,10 +102,7 @@ Specify a component name for `loading` prop.
 </template>
 
 <script>
-import Loading from '../components/Loading.vue'
-export default {
-  components: { Loading }
-}
+export default {}
 </script>
 ```
 
@@ -195,10 +188,7 @@ Specify a component name for `loading` prop.
 </template>
 
 <script>
-import Loading from '../components/Loading.vue'
-export default {
-  components: { Loading }
-}
+export default {}
 </script>
 ```
 
@@ -285,10 +275,8 @@ Specify a component name for `loading` prop.
 <template>
   <spearly-form loading="Loading" id="FORM_ID" />
 </template>
+
 <script>
-import Loading from '../components/Loading.vue'
-export default {
-  components: { Loading }
-}
+export default {}
 </script>
 ```
