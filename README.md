@@ -10,10 +10,10 @@ This package allows you to easily implement Spearly in your nuxt project!
 
 ```
 // npm
-$ npm i -S @spearly/nuxt-module@^1.0.0-next.1
+$ npm i -S @spearly/nuxt-module@^1.0.0-next.3
 
 // yarn
-$ yarn add @spearly/nuxt-module@^1.0.0-next.1
+$ yarn add @spearly/nuxt-module@^1.0.0-next.3
 ```
 
 ### Setup
@@ -49,7 +49,7 @@ export default {
 
 ```vue
 <template>
-  <spearly-content-list :wrapper="Wrapper" :item="ListItem" id="CONTENT_TYPE_ID">
+  <spearly-content-list wrapper="Wrapper" item="ListItem" id="CONTENT_TYPE_ID">
       <template v-slot="item">
         <nuxt-link :to="`/${item.content.attributes.publicUid}`">
           {{ item.content.values.title }}
@@ -57,11 +57,6 @@ export default {
       </template>
     </spearly-content-list>
 </template>
-
-<script type="ts" setup>
-import Wrapper from '../components/Wrapper.vue'
-import ListItem from '../components/ListItem.vue'
-</script>
 ```
 
 #### use Show Loading
@@ -70,7 +65,7 @@ Specify a component name for `loading` prop.
 
 ```vue
 <template>
-  <spearly-content-list :loading="Loading" id="CONTENT_TYPE_ID">
+  <spearly-content-list loading="Loading" id="CONTENT_TYPE_ID">
       <template v-slot="item">
         <nuxt-link :to="`/${item.content.attributes.publicUid}`">
           {{ item.content.values.title }}
@@ -78,10 +73,6 @@ Specify a component name for `loading` prop.
       </template>
     </spearly-content-list>
 </template>
-
-<script lang="ts" setup>
-import Loading from '../components/Loading.vue'
-</script>
 ```
 
 #### Advanced props
@@ -147,7 +138,7 @@ Specify a component name for `loading` prop.
 
 ```vue
 <template>
-  <spearly-content :loading="Loading" id="CONTENT_PUBLIC_UID">
+  <spearly-content loading="Loading" id="CONTENT_PUBLIC_UID">
     <template v-slot="content">
       <header>
         <h1>{{ content.values.title }}</h1>
@@ -156,10 +147,6 @@ Specify a component name for `loading` prop.
     </template>
   </spearly-content>
 </template>
-
-<script lang="ts" setup>
-import Loading from '../components/Loading.vue'
-</script>
 ```
 
 #### show Preview
@@ -231,10 +218,6 @@ Specify a component name for `loading` prop.
 
 ```vue
 <template>
-  <spearly-form :loading="Loading" id="FORM_ID" />
+  <spearly-form loading="Loading" id="FORM_ID" />
 </template>
-
-<script lang="ts" setup>
-import Loading from '../components/Loading.vue'
-</script>
 ```
