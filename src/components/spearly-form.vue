@@ -41,14 +41,15 @@
                 }}
               </p>
             </template>
-            <template v-else-if="field.inputType === 'text'">
+            <template v-else-if="['text', 'number', 'email', 'tel', 'url'].includes(field.inputType)">
               <input
                 :id="field.identifier"
                 v-model="answers[field.identifier]"
                 :required="field.required"
                 :disabled="!isActive"
+                :aria-invalid="!!getErrorMessage(field.identifier)"
                 :aria-describedby="field.description ? `${field.identifier}-description` : null"
-                type="text"
+                :type="field.inputType"
               />
             </template>
             <template v-else-if="field.inputType === 'text_area'">
@@ -57,6 +58,7 @@
                 v-model="answers[field.identifier]"
                 :require="field.required"
                 :disabled="!isActive"
+                :aria-invalid="!!getErrorMessage(field.identifier)"
                 :aria-describedby="field.description ? `${field.identifier}-description` : null"
               />
             </template>
@@ -89,24 +91,34 @@
               </label>
             </template>
 
-            <input
-              v-model="answers._spearly_gotcha"
-              type="text"
-              name="_spearly_gotcha"
-              tabindex="-1"
-              style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden"
-            />
-
             <p v-if="field.description" :id="`${field.identifier}-description`" class="spearly-form-field-description">
               {{ field.description }}
             </p>
+
+            <p
+              v-if="getErrorMessage(field.identifier)"
+              :id="`spearly-form-field-${field.identifier}-error`"
+              role="alert"
+              aria-live="assertive"
+              class="spearly-form-field-error"
+            >
+              {{ getErrorMessage(field.identifier) }}
+            </p>
           </fieldset>
+
+          <input
+            v-model="answers._spearly_gotcha"
+            type="text"
+            name="_spearly_gotcha"
+            tabindex="-1"
+            style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden"
+          />
 
           <p v-if="!isActive" class="spearly-form-outside">
             <span>このフォームは現在受付期間外です。</span>
           </p>
 
-          <p v-if="validateError" class="spearly-form-error">
+          <p v-if="validateErrors.length" class="spearly-form-error">
             <span>入力されていない項目があります。</span>
           </p>
 
@@ -146,8 +158,8 @@ export type Data = {
     createdAt: Date | null
   } & Omit<Form, 'createdAt'>
   answers: { [key: string]: string | string[]; _spearly_gotcha: string }
+  validateErrors: { identifier: string; message: string }[]
   error: boolean
-  validateError: boolean
   confirm: boolean
   submitted: boolean
   isLoaded: boolean
@@ -158,7 +170,8 @@ export default Vue.extend<
   {
     setAnswersObj: () => void
     formattedDate: (date: Date) => string
-    validate: () => boolean
+    getErrorMessage: (identifier: string) => string
+    validate: () => void
     submit: (fields: { [key: string]: unknown } & { _spearly_gotcha: string }) => Promise<void>
     onClick: () => void
   },
@@ -192,15 +205,15 @@ export default Vue.extend<
       answers: {
         _spearly_gotcha: '',
       },
+      validateErrors: [],
       error: false,
-      validateError: false,
       confirm: false,
       submitted: false,
       isLoaded: false,
     }
   },
   async fetch() {
-    const res = await this.$spearly.getFormLatest(this.id)
+    const res = await this.$spearly.getFormLatest((this as any).id)
     this.form = res
     this.isLoaded = true
   },
@@ -246,21 +259,66 @@ export default Vue.extend<
       const mi = String(date.getMinutes()).padStart(2, '0')
       return `${y}/${m}/${d} ${h}:${mi}`
     },
+    getErrorMessage(identifier) {
+      return this.validateErrors.find((error) => error.identifier === identifier)?.message || ''
+    },
     validate() {
-      const requiredFieldIds: string[] = this.form.fields
-        .filter((field) => field.required)
+      if ((this as any).noValidate) return
+
+      this.validateErrors = []
+
+      const requiredFields = this.form.fields.filter((field) => field.required).map((field) => field.identifier)
+      const numberFields = this.form.fields
+        .filter((field) => field.inputType === 'number')
         .map((field) => field.identifier)
-      return requiredFieldIds.every((identifier) => {
-        return !!this.answers[identifier]
+      const emailFields = this.form.fields
+        .filter((field) => field.inputType === 'email')
+        .map((field) => field.identifier)
+      const telFields = this.form.fields.filter((field) => field.inputType === 'tel').map((field) => field.identifier)
+      const urlFields = this.form.fields.filter((field) => field.inputType === 'url').map((field) => field.identifier)
+
+      requiredFields.forEach((identifier) => {
+        if (Array.isArray(this.answers[identifier]) && !this.answers[identifier].length) {
+          this.validateErrors.push({ identifier, message: '選択してください。' })
+          return
+        }
+
+        if (!this.answers[identifier]) {
+          this.validateErrors.push({ identifier, message: '入力してください。' })
+        }
+      })
+
+      numberFields.forEach((identifier) => {
+        if (this.answers[identifier] && !/^[0-9]+$/.test(this.answers[identifier] as string)) {
+          this.validateErrors.push({ identifier, message: '数字を入力してください。' })
+        }
+      })
+
+      emailFields.forEach((identifier) => {
+        if (this.answers[identifier] && !/^[\w\-._]+@[\w\-._]+\.[A-Za-z]+$/.test(this.answers[identifier] as string)) {
+          this.validateErrors.push({ identifier, message: 'メールアドレスの形式で入力してください。' })
+        }
+      })
+
+      telFields.forEach((identifier) => {
+        if (this.answers[identifier] && !/^[0-9\-]+$/.test(this.answers[identifier] as string)) {
+          this.validateErrors.push({ identifier, message: '電話番号を入力してください。' })
+        }
+      })
+
+      urlFields.forEach((identifier) => {
+        if (
+          this.answers[identifier] &&
+          !/^https?:\/\/[\w!?/+\-_~;.,*&@#$%()'[\]]+?\..*?$/.test(this.answers[identifier] as string)
+        ) {
+          this.validateErrors.push({ identifier, message: 'URLを入力してください。' })
+        }
       })
     },
     onClick() {
       if (!this.confirm) {
-        if (!this.validate()) {
-          this.validateError = true
-          return
-        }
-        this.validateError = false
+        this.validate()
+        if (this.validateErrors.length) return
         this.confirm = true
         return
       }

@@ -13,6 +13,10 @@ const defaultProps = { id: 'form', noValidate: false }
 const filledAnswers = {
   _spearly_gotcha: '',
   text: 'text',
+  number: '',
+  email: '',
+  tel: '',
+  url: '',
   textArea: 'text',
   radio: '',
   checkbox: [],
@@ -23,7 +27,7 @@ const createWrapper = (
   propsData: Props = defaultProps,
   successed = true,
   now = new Date().getTime()
-): Wrapper<SpearlyForm> => {
+): Wrapper<any> => {
   return shallowMount(SpearlyForm, {
     propsData,
     slots,
@@ -41,7 +45,7 @@ const createWrapper = (
 }
 
 describe('SpearlyForm', () => {
-  let wrapper: Wrapper<SpearlyForm>
+  let wrapper: Wrapper<any>
 
   describe('Snapshot', () => {
     it('Basic', () => {
@@ -73,6 +77,10 @@ describe('SpearlyForm', () => {
         expect(wrapper.vm.$data.answers).toEqual({
           _spearly_gotcha: '',
           text: '',
+          number: '',
+          email: '',
+          tel: '',
+          url: '',
           textArea: '',
           radio: '',
           checkbox: [],
@@ -118,15 +126,16 @@ describe('SpearlyForm', () => {
   })
 
   describe('Processing the Send Button', () => {
-    it('If required is set and there are unentered fields, make it an error.', () => {
-      wrapper = createWrapper()
-      wrapper.setData({ form: createFormMock() })
-      wrapper.vm.$nextTick(() => {
-        wrapper.find('.spearly-form-submit').trigger('click')
+    describe('form validation', () => {
+      it('If required is set and there are unentered fields, make it an error.', () => {
+        wrapper = createWrapper()
+        wrapper.setData({ form: createFormMock() })
         wrapper.vm.$nextTick(() => {
-          const errorEl = wrapper.find('.spearly-form-error')
-          expect(errorEl).toBeTruthy()
-          expect(errorEl.text()).toBe('入力されていない項目があります。')
+          wrapper.find('.spearly-form-submit').trigger('click')
+          wrapper.vm.$nextTick(() => {
+            const errorEl = wrapper.find('.spearly-form-error')
+            expect(errorEl.text()).toBe('入力されていない項目があります。')
+          })
         })
       })
     })
@@ -178,6 +187,10 @@ describe('SpearlyForm', () => {
         expect((wrapper.vm as any).answers).toEqual({
           _spearly_gotcha: '',
           text: '',
+          number: '',
+          email: '',
+          tel: '',
+          url: '',
           textArea: '',
           radio: '',
           checkbox: [],
