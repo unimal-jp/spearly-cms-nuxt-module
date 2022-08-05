@@ -52,13 +52,6 @@ exports[`SpearlyForm Snapshot Basic 1`] = `
         type="text"
       />
        
-      <input
-        name="_spearly_gotcha"
-        style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden;"
-        tabindex="-1"
-        type="text"
-      />
-       
       <p
         class="spearly-form-field-description"
         id="text-description"
@@ -67,6 +60,128 @@ exports[`SpearlyForm Snapshot Basic 1`] = `
             Text description.
           
       </p>
+       
+      <!---->
+    </fieldset>
+    <fieldset>
+      <label
+        for="number"
+      >
+        
+            Number
+            
+        <i>
+          *
+        </i>
+      </label>
+       
+      <input
+        aria-describedby="number-description"
+        id="number"
+        required="required"
+        type="number"
+      />
+       
+      <p
+        class="spearly-form-field-description"
+        id="number-description"
+      >
+        
+            Number description.
+          
+      </p>
+       
+      <!---->
+    </fieldset>
+    <fieldset>
+      <label
+        for="email"
+      >
+        
+            Email
+            
+        <i>
+          *
+        </i>
+      </label>
+       
+      <input
+        aria-describedby="email-description"
+        id="email"
+        required="required"
+        type="email"
+      />
+       
+      <p
+        class="spearly-form-field-description"
+        id="email-description"
+      >
+        
+            Email description.
+          
+      </p>
+       
+      <!---->
+    </fieldset>
+    <fieldset>
+      <label
+        for="tel"
+      >
+        
+            TEL
+            
+        <i>
+          *
+        </i>
+      </label>
+       
+      <input
+        aria-describedby="tel-description"
+        id="tel"
+        required="required"
+        type="tel"
+      />
+       
+      <p
+        class="spearly-form-field-description"
+        id="tel-description"
+      >
+        
+            TEL description.
+          
+      </p>
+       
+      <!---->
+    </fieldset>
+    <fieldset>
+      <label
+        for="url"
+      >
+        
+            URL
+            
+        <i>
+          *
+        </i>
+      </label>
+       
+      <input
+        aria-describedby="url-description"
+        id="url"
+        required="required"
+        type="url"
+      />
+       
+      <p
+        class="spearly-form-field-description"
+        id="url-description"
+      >
+        
+            URL description.
+          
+      </p>
+       
+      <!---->
     </fieldset>
     <fieldset>
       <label
@@ -86,13 +201,6 @@ exports[`SpearlyForm Snapshot Basic 1`] = `
         require="true"
       />
        
-      <input
-        name="_spearly_gotcha"
-        style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden;"
-        tabindex="-1"
-        type="text"
-      />
-       
       <p
         class="spearly-form-field-description"
         id="textArea-description"
@@ -101,6 +209,8 @@ exports[`SpearlyForm Snapshot Basic 1`] = `
             Textarea description.
           
       </p>
+       
+      <!---->
     </fieldset>
     <fieldset>
       <label>
@@ -139,13 +249,6 @@ exports[`SpearlyForm Snapshot Basic 1`] = `
         </span>
       </label>
        
-      <input
-        name="_spearly_gotcha"
-        style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden;"
-        tabindex="-1"
-        type="text"
-      />
-       
       <p
         class="spearly-form-field-description"
         id="radio-description"
@@ -154,6 +257,8 @@ exports[`SpearlyForm Snapshot Basic 1`] = `
             Radio description.
           
       </p>
+       
+      <!---->
     </fieldset>
     <fieldset>
       <label>
@@ -206,13 +311,6 @@ exports[`SpearlyForm Snapshot Basic 1`] = `
         </span>
       </label>
        
-      <input
-        name="_spearly_gotcha"
-        style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden;"
-        tabindex="-1"
-        type="text"
-      />
-       
       <p
         class="spearly-form-field-description"
         id="checkbox-description"
@@ -221,7 +319,16 @@ exports[`SpearlyForm Snapshot Basic 1`] = `
             Checkbox description.
           
       </p>
+       
+      <!---->
     </fieldset>
+     
+    <input
+      name="_spearly_gotcha"
+      style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden;"
+      tabindex="-1"
+      type="text"
+    />
      
     <!---->
      
