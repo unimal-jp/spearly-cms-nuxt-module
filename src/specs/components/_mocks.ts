@@ -104,6 +104,7 @@ export const createFormMock = (startedAt: Date | null = null, endedAt: Date | nu
       required: false,
       data: {
         options: ['r1', 'r2'],
+        allowedExtensions: [],
       },
     },
     {
@@ -115,6 +116,7 @@ export const createFormMock = (startedAt: Date | null = null, endedAt: Date | nu
       required: false,
       data: {
         options: ['c1', 'c2', 'c3'],
+        allowedExtensions: [],
       },
     },
   ],
