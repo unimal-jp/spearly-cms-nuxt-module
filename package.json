@@ -47,7 +47,7 @@
   ],
   "devDependencies": {
     "@babel/preset-env": "^7.15.0",
-    "@nuxt/kit": "npm:@nuxt/kit-edge@latest",
+    "@nuxt/kit": "^3.0.0-rc.6",
     "@nuxt/module-builder": "^0.1.7",
     "@types/jest": "^27.0.1",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
