@@ -33,12 +33,15 @@
             </label>
 
             <template v-if="confirm">
-              <p class="spearly-form-answer-confirm">
+              <p v-if="field.inputType !== 'file'" class="spearly-form-answer-confirm">
                 {{
                   Array.isArray(answers[field.identifier])
                     ? answers[field.identifier].join(', ')
                     : answers[field.identifier]
                 }}
+              </p>
+              <p v-else class="spearly-form-answer-confirm">
+                {{ files[field.identifier] }}
               </p>
             </template>
             <template v-else-if="['text', 'number', 'email', 'tel', 'url'].includes(field.inputType)">
@@ -88,6 +91,17 @@
                   :aria-describedby="field.description ? `${field.identifier}-description` : null"
                 />
                 <span>{{ option }}</span>
+              </label>
+            </template>
+            <template v-else-if="field.inputType === 'file'">
+              <label class="spearly-form-file">
+                <input
+                  :name="field.identifier"
+                  :required="field.required"
+                  :accept="field.data.allowedExtensions.map((extension) => `.${extension}`).join(',')"
+                  type="file"
+                  @change="onChangeFile($event, field.identifier)"
+                />
               </label>
             </template>
 
@@ -158,6 +172,7 @@ export type Data = {
     createdAt: Date | null
   } & Omit<Form, 'createdAt'>
   answers: { [key: string]: string | string[]; _spearly_gotcha: string }
+  files: { [key: string]: string }
   validateErrors: { identifier: string; message: string }[]
   error: boolean
   confirm: boolean
@@ -173,6 +188,7 @@ export default Vue.extend<
     getErrorMessage: (identifier: string) => string
     validate: () => void
     submit: (fields: { [key: string]: unknown } & { _spearly_gotcha: string }) => Promise<void>
+    onChangeFile: (event: Event, identifier: string) => void
     onClick: () => void
   },
   {
@@ -205,6 +221,7 @@ export default Vue.extend<
       answers: {
         _spearly_gotcha: '',
       },
+      files: {},
       validateErrors: [],
       error: false,
       confirm: false,
@@ -248,6 +265,9 @@ export default Vue.extend<
       if (this.$scopedSlots.default) return
       this.form.fields.forEach((field) => {
         this.answers[field.identifier] = field.inputType === 'checkbox' && field.data?.options.length ? [] : ''
+        if (field.inputType === 'file') {
+          this.files[field.identifier] = ''
+        }
       })
     },
     formattedDate(date) {
@@ -314,6 +334,24 @@ export default Vue.extend<
           this.validateErrors.push({ identifier, message: 'URLを入力してください。' })
         }
       })
+    },
+    onChangeFile(event, identifier) {
+      const fileReader = new FileReader()
+      const files = (event.target as HTMLInputElement).files
+
+      if (!files) return
+      if (!files.length) {
+        this.answers[identifier] = ''
+        this.files[identifier] = ''
+        return
+      }
+
+      fileReader.onload = () => {
+        this.answers[identifier] = fileReader.result as string
+        this.files[identifier] = files[0].name
+      }
+
+      fileReader.readAsDataURL(files[0])
     },
     onClick() {
       if (!this.confirm) {
