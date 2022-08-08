@@ -40,14 +40,15 @@
                 }}
               </p>
             </template>
-            <template v-else-if="field.inputType === 'text'">
+            <template v-else-if="['text', 'number', 'email', 'tel', 'url'].includes(field.inputType)">
               <input
                 :id="field.identifier"
                 v-model="state.answers[field.identifier]"
                 :required="field.required"
                 :disabled="!isActive"
+                :aria-invalid="!!state.errors.get(field.identifier)"
                 :aria-describedby="field.description ? `${field.identifier}-description` : null"
-                type="text"
+                :type="field.inputType"
               />
             </template>
             <template v-else-if="field.inputType === 'text_area'">
@@ -56,6 +57,7 @@
                 v-model="state.answers[field.identifier]"
                 :require="field.required"
                 :disabled="!isActive"
+                :aria-invalid="!!state.errors.get(field.identifier)"
                 :aria-describedby="field.description ? `${field.identifier}-description` : null"
               />
             </template>
@@ -88,24 +90,34 @@
               </label>
             </template>
 
-            <input
-              v-model="state.answers._spearly_gotcha"
-              type="text"
-              name="_spearly_gotcha"
-              tabindex="-1"
-              style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden"
-            />
-
             <p v-if="field.description" :id="`${field.identifier}-description`" class="spearly-form-field-description">
               {{ field.description }}
             </p>
+
+            <p
+              v-if="state.errors.get(field.identifier)"
+              :id="`spearly-form-field-${field.identifier}-error`"
+              role="alert"
+              aria-live="assertive"
+              class="spearly-form-field-error"
+            >
+              {{ state.errors.get(field.identifier) }}
+            </p>
           </fieldset>
+
+          <input
+            v-model="state.answers._spearly_gotcha"
+            type="text"
+            name="_spearly_gotcha"
+            tabindex="-1"
+            style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden"
+          />
 
           <p v-if="!isActive" class="spearly-form-outside">
             <span>このフォームは現在受付期間外です。</span>
           </p>
 
-          <p v-if="state.validateError" class="spearly-form-error">
+          <p v-if="hasError" class="spearly-form-error">
             <span>入力されていない項目があります。</span>
           </p>
 
@@ -160,6 +172,7 @@ const state = reactive<SpearlyFormState>({
   answers: {
     _spearly_gotcha: '',
   },
+  errors: new Map(),
   error: false,
   validateError: false,
   confirm: false,
@@ -211,13 +224,57 @@ const formattedDate = (date: Date) => {
 }
 
 const validate = () => {
-  const requiredFieldIds: string[] = state.form.fields
-    .filter((field) => field.required)
+  state.errors.clear()
+
+  const requiredFields = state.form.fields.filter((field) => field.required).map((field) => field.identifier)
+  const numberFields = state.form.fields
+    .filter((field) => field.inputType === 'number')
     .map((field) => field.identifier)
-  return requiredFieldIds.every((identifier) => {
-    return !!state.answers[identifier]
+  const emailFields = state.form.fields.filter((field) => field.inputType === 'email').map((field) => field.identifier)
+  const telFields = state.form.fields.filter((field) => field.inputType === 'tel').map((field) => field.identifier)
+  const urlFields = state.form.fields.filter((field) => field.inputType === 'url').map((field) => field.identifier)
+
+  requiredFields.forEach((identifier) => {
+    if (Array.isArray(state.answers[identifier]) && !state.answers.length) {
+      state.errors.set(identifier, '選択してください。')
+      return
+    }
+    if (!state.answers[identifier]) {
+      state.errors.set(identifier, '入力してください。')
+    }
+  })
+
+  numberFields.forEach((identifier) => {
+    if (state.answers[identifier] && !/^[0-9]+$/.test(state.answers[identifier] as string)) {
+      state.errors.set(identifier, '数字を入力してください。')
+    }
+  })
+
+  emailFields.forEach((identifier) => {
+    if (state.answers[identifier] && !/^[\w\-._]+@[\w\-._]+\.[A-Za-z]+$/.test(state.answers[identifier] as string)) {
+      state.errors.set(identifier, 'メールアドレスの形式で入力してください。')
+    }
+  })
+
+  telFields.forEach((identifier) => {
+    if (state.answers[identifier] && !/^[0-9\-]+$/.test(state.answers[identifier] as string)) {
+      state.errors.set(identifier, '電話番号を入力してください。')
+    }
+  })
+
+  urlFields.forEach((identifier) => {
+    if (
+      state.answers[identifier] &&
+      !/^https?:\/\/[\w!?/+\-_~;.,*&@#$%()'[\]]+?\..*?$/.test(state.answers[identifier] as string)
+    ) {
+      state.errors.set(identifier, 'URLを入力してください。')
+    }
   })
 }
+
+const hasError = computed(() => {
+  return !!state.errors.size
+})
 
 const submit = async (fields: { [key: string]: unknown } & { _spearly_gotcha: string }) => {
   try {
@@ -242,11 +299,8 @@ const submit = async (fields: { [key: string]: unknown } & { _spearly_gotcha: st
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const onClick = () => {
   if (!state.confirm) {
-    if (!validate()) {
-      state.validateError = true
-      return
-    }
-    state.validateError = false
+    validate()
+    if (hasError.value) return
     state.confirm = true
     return
   }

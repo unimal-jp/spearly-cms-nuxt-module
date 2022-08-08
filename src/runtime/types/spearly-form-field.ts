@@ -1,10 +1,12 @@
+import { SpearlyFormFieldType } from './spearly-form-field-type'
+
 export type SpearlyFormField = {
   data?: {
     options: string[]
   }
   description: string
   identifier: string
-  inputType: 'text' | 'radio' | 'checkbox' | 'text_area'
+  inputType: SpearlyFormFieldType
   name: string
   order: number
   required: boolean
