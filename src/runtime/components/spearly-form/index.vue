@@ -32,12 +32,15 @@
             </label>
 
             <template v-if="state.confirm">
-              <p class="spearly-form-answer-confirm">
+              <p v-if="field.inputType !== 'file'" class="spearly-form-answer-confirm">
                 {{
                   Array.isArray(state.answers[field.identifier])
                     ? (state.answers[field.identifier] as string[]).join(', ')
                     : state.answers[field.identifier]
                 }}
+              </p>
+              <p v-else class="spearly-form-answer-confirm">
+                {{ state.files[field.identifier] }}
               </p>
             </template>
             <template v-else-if="['text', 'number', 'email', 'tel', 'url'].includes(field.inputType)">
@@ -87,6 +90,17 @@
                   :aria-describedby="field.description ? `${field.identifier}-description` : null"
                 />
                 <span>{{ option }}</span>
+              </label>
+            </template>
+            <template v-else-if="field.inputType === 'file'">
+              <label class="spearly-form-file">
+                <input
+                  :name="field.identifier"
+                  :required="field.required"
+                  :accept="field.data.allowedExtensions.map((extension) => `.${extension}`).join(',')"
+                  type="file"
+                  @change="onChangeFile($event, field.identifier)"
+                />
               </label>
             </template>
 
@@ -172,6 +186,7 @@ const state = reactive<SpearlyFormState>({
   answers: {
     _spearly_gotcha: '',
   },
+  files: {},
   errors: new Map(),
   error: false,
   validateError: false,
@@ -209,6 +224,10 @@ const fetchFormLatest = async () => {
 const setAnswersObj = () => {
   state.form.fields.forEach((field) => {
     state.answers[field.identifier] = field.inputType === 'checkbox' && field.data?.options.length ? [] : ''
+
+    if (field.inputType === 'file') {
+      state.files[field.identifier] = ''
+    }
   })
 }
 
@@ -305,6 +324,26 @@ const onClick = () => {
     return
   }
   submit(state.answers)
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const onChangeFile = (event: Event, identifier: string) => {
+  const fileReader = new FileReader()
+  const files = (event.target as HTMLInputElement).files
+
+  if (!files) return
+  if (!files.length) {
+    state.answers[identifier] = ''
+    state.files[identifier] = ''
+    return
+  }
+
+  fileReader.onload = () => {
+    state.answers[identifier] = fileReader.result as string
+    state.files[identifier] = files[0].name
+  }
+
+  fileReader.readAsDataURL(files[0])
 }
 
 onMounted(() => {

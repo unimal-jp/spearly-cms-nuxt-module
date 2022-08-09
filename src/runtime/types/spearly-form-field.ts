@@ -2,7 +2,8 @@ import { SpearlyFormFieldType } from './spearly-form-field-type'
 
 export type SpearlyFormField = {
   data?: {
-    options: string[]
+    options?: string[]
+    allowedExtensions?: ('jpg' | 'png' | 'pdf')[]
   }
   description: string
   identifier: string
