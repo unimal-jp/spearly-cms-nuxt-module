@@ -14,9 +14,10 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount, reactive, computed, watch } from 'vue'
+import { onBeforeUnmount, reactive, computed, watch, type PropType } from 'vue'
 import { useNuxtApp } from '#app'
-import { SpearlyContentListState } from './types'
+import type { SpearlyContentListState } from './types'
+import type { SpearlyGetParams } from '../../types'
 
 const app = useNuxtApp()
 const props = defineProps({
@@ -25,9 +26,12 @@ const props = defineProps({
   offset: { type: Number },
   order: { type: String },
   orderBy: { type: String },
+  orders: { type: Object as PropType<SpearlyGetParams['orders']> },
   filterBy: { type: String },
-  filterValue: { type: String },
+  filterValue: { type: [String, Array] as PropType<SpearlyGetParams['filterValue']> },
   filterRef: { type: String },
+  filterMode: { type: String as PropType<SpearlyGetParams['filterMode']> },
+  filters: { type: Object as PropType<SpearlyGetParams['filters']> },
   rangeFrom: { type: Date },
   rangeTo: { type: Date },
   wrapper: { type: [String, Object], default: 'div' },
@@ -55,7 +59,8 @@ const fetchContentList = async () => {
   state.isLoaded = false
 
   try {
-    const { id, ...params } = props
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, wrapper, item, loading, ...params } = props
     const { data, next, matchingContentsCount, totalContentsCount } =
       await app.vueApp._context.provides.$spearly.getSpearlyList(id, params)
     state.contents = data
