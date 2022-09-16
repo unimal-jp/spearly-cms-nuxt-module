@@ -264,7 +264,7 @@ export default Vue.extend<
     setAnswersObj() {
       if (this.$scopedSlots.default) return
       this.form.fields.forEach((field) => {
-        this.answers[field.identifier] = field.inputType === 'checkbox' && field.data?.options.length ? [] : ''
+        this.answers[field.identifier] = field.inputType === 'checkbox' && field.data?.options?.length ? [] : ''
         if (field.inputType === 'file') {
           this.files[field.identifier] = ''
         }

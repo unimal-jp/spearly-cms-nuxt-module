@@ -15,6 +15,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import type { PropType } from 'vue'
 import { GetParams, Content } from '@spearly/sdk-js'
 
 export type Props = {
@@ -41,9 +42,12 @@ export default Vue.extend<Data, unknown, unknown, Props>({
     offset: { type: Number },
     order: { type: String },
     orderBy: { type: String },
+    orders: { type: Object as PropType<GetParams['orders']> },
     filterBy: { type: String },
-    filterValue: { type: String },
+    filterValue: { type: [String, Array] as PropType<GetParams['filterValue']> },
     filterRef: { type: String },
+    filterMode: { type: String as PropType<GetParams['filterMode']> },
+    filters: { type: Object as PropType<GetParams['filters']> },
     rangeFrom: { type: Date },
     rangeTo: { type: Date },
     wrapper: { type: [String], default: 'div' },
@@ -65,9 +69,12 @@ export default Vue.extend<Data, unknown, unknown, Props>({
     if (this.offset) params.offset = this.offset
     if (this.order && ['asc', 'desc'].includes(this.order)) params.order = this.order as 'desc' | 'asc'
     if (this.orderBy) params.orderBy = this.orderBy
+    if (this.orders) params.orders = this.orders
     if (this.filterBy) params.filterBy = this.filterBy
     if (this.filterValue) params.filterValue = this.filterValue
     if (this.filterRef) params.filterRef = this.filterRef
+    if (this.filterMode) params.filterMode = this.filterMode
+    if (this.filters) params.filters = this.filters
     if (this.rangeFrom) params.rangeFrom = this.rangeFrom
     if (this.rangeTo) params.rangeTo = this.rangeTo
     const res = await this.$spearly.getList(this.id, Object.keys(params).length ? params : undefined)
