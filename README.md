@@ -22,7 +22,7 @@ $ yarn add @spearly/nuxt-module@^1.0.0-next.3
 ```ts
 export default {
   ...
-  modules: ['@spearly/nuxt-module', { apiKey: 'YOUR_API_KEY' }]
+  modules: [['@spearly/nuxt-module', { apiKey: 'YOUR_API_KEY' }]]
 }
 ```
 
