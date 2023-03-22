@@ -1,0 +1,26 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser",
+    "ecmaVersion": 2020
+  },
+  "extends": ["plugin:prettier/recommended", "@vue/typescript/recommended"],
+  "rules": {
+    "comma-dangle": "off",
+    "space-before-function-paren": "off",
+    "prettier/prettier": [
+      "error",
+      {
+        "semi": false,
+        "bracketSpacing": true,
+        "singleQuote": true,
+        "arrowParens": "always",
+        "printWidth": 120
+      }
+    ]
+  }
+}

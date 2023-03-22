@@ -1,5 +1,5 @@
-module.exports = {
-  roots: ['<rootDir>/src'],
+export default {
+  roots: ['<rootDir>'],
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   globals: {
@@ -12,10 +12,9 @@ module.exports = {
   },
   moduleFileExtensions: ['js', 'ts', 'vue', 'json', 'tsx', 'node'],
   transform: {
-    '.*\\.(vue)$': 'vue-jest',
     '^.+\\.tsx?$': 'ts-jest',
   },
   testMatch: [
-    '<rootDir>/src/specs/**/*.spec.{js,ts}',
+    '<rootDir>/specs/**/*.spec.{js,ts}',
   ],
 }

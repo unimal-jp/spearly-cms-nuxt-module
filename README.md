@@ -14,40 +14,21 @@ Please see [nuxt3-version branch](https://github.com/unimal-jp/spearly-cms-nuxt-
 
 ```
 // npm
-$ npm i -S @spearly/nuxt-module
+$ npm i -S @spearly/nuxt-module@^1.0.0-next.3
 
 // yarn
-$ yarn add @spearly/nuxt-module
+$ yarn add @spearly/nuxt-module@^1.0.0-next.3
 ```
 
 #### 
 
 ### Setup
 
-#### nuxt.config.(j|t)s
+#### nuxt.config.ts
 ```ts
 export default {
   ...
-  buildModules: ['@spearly/nuxt-module'],
-  spearly: {
-    options: {
-      apiKey: 'SPEARLY_API_KEY',
-    },
-    mode: 'all',
-  },
-}
-```
-
-#### tsconfig.json
-*Only if you use TypeScript.
-
-```json
-{
-  "compilerOptions": {
-    ...
-    "types": ["@spearly/nuxt-module"]
-  },
-  ...
+  modules: [['@spearly/nuxt-module', { apiKey: 'YOUR_API_KEY' }]]
 }
 ```
 
@@ -58,17 +39,13 @@ export default {
 ```vue
 <template>
   <spearly-content-list id="CONTENT_TYPE_ID">
-      <template v-slot="item">
-        <nuxt-link :to="`/${item.content.attributes.publicUid}`">
-          {{ item.content.values.title }}
-        </nuxt-link>
-      </template>
-    </spearly-content-list>
+    <template v-slot="item">
+      <nuxt-link :to="`/${item.content.attributes.publicUid}`">
+        {{ item.content.values.title }}
+      </nuxt-link>
+    </template>
+  </spearly-content-list>
 </template>
-
-<script>
-export default {}
-</script>
 ```
 
 #### use Custom Components
@@ -86,10 +63,6 @@ export default {}
       </template>
     </spearly-content-list>
 </template>
-
-<script>
-export default {}
-</script>
 ```
 
 #### use Show Loading
@@ -106,10 +79,6 @@ Specify a component name for `loading` prop.
       </template>
     </spearly-content-list>
 </template>
-
-<script>
-export default {}
-</script>
 ```
 
 #### Advanced props
@@ -155,10 +124,6 @@ Since the `pager slot has a `paging` scope, you can freely create paginations wi
       </template>
     </spearly-content-list>
 </template>
-
-<script>
-export default {}
-</script>
 ```
 
 ### Content
@@ -174,10 +139,6 @@ export default {}
     </template>
   </spearly-content>
 </template>
-
-<script>
-export default {}
-</script>
 ```
 
 #### use Show Loading
@@ -195,10 +156,6 @@ Specify a component name for `loading` prop.
     </template>
   </spearly-content>
 </template>
-
-<script>
-export default {}
-</script>
 ```
 
 #### show Preview
@@ -216,10 +173,6 @@ You can preview the draft content by specifying `preview-token` and `id`.
     </template>
   </spearly-content>
 </template>
-
-<script>
-export default {}
-</script>
 ```
 
 ### Form
@@ -228,10 +181,6 @@ export default {}
 <template>
   <spearly-form id="FORM_ID" />
 </template>
-
-<script>
-export default {}
-</script>
 ```
 
 #### Advanced form
@@ -248,7 +197,7 @@ export default {}
 
         <input
           :id="field.identifier"
-          v-model="answers[field.identifier]"
+          v-model="state.answers[field.identifier]"
           :required="field.required"
           :aria-describedby="field.description ? `${field.identifier}-description` : null"
           type="text"
@@ -261,18 +210,14 @@ export default {}
   </spearly-form>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      answers: {
-        YOUR_FORM_FIELD_ID: '',
-        ...,
-        _spearly_gotcha: '',
-      }
-    }
-  }
-}
+<script lang="ts" setup>
+const state = reactive({
+  answers: {
+    YOUR_FORM_FIELD_ID: '',
+    ...,
+    _spearly_gotcha: '',
+  },
+})
 </script>
 ```
 
@@ -284,8 +229,4 @@ Specify a component name for `loading` prop.
 <template>
   <spearly-form loading="Loading" id="FORM_ID" />
 </template>
-
-<script>
-export default {}
-</script>
 ```
