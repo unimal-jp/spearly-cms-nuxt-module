@@ -7,7 +7,7 @@ export default defineNuxtModule<SpearlyNuxtModuleOptions>({
     configKey: 'spearlyNuxtModule',
   },
   async setup(options, nuxt) {
-    nuxt.options.publicRuntimeConfig.spearly = {
+    nuxt.options.runtimeConfig.public.spearly = {
       apiKey: options.apiKey,
     }
 
