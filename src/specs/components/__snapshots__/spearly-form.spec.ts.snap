@@ -338,7 +338,7 @@ exports[`SpearlyForm Snapshot Basic 1`] = `
       class="spearly-form-submit"
     >
       <span>
-        送信
+        Submit
       </span>
     </button>
      

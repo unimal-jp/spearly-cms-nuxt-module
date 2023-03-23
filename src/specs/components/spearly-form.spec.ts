@@ -12,6 +12,7 @@ const defaultProps = { id: 'form', noValidate: false }
 
 const filledAnswers = {
   _spearly_gotcha: '',
+  confirmation_email: 'test@example.com',
   text: 'text',
   number: '',
   email: '',
@@ -76,6 +77,7 @@ describe('SpearlyForm', () => {
       wrapper.vm.$nextTick(() => {
         expect(wrapper.vm.$data.answers).toEqual({
           _spearly_gotcha: '',
+          confirmation_email: '',
           text: '',
           number: '',
           email: '',
@@ -186,6 +188,7 @@ describe('SpearlyForm', () => {
         await flushPromises()
         expect((wrapper.vm as any).answers).toEqual({
           _spearly_gotcha: '',
+          confirmation_email: '',
           text: '',
           number: '',
           email: '',
