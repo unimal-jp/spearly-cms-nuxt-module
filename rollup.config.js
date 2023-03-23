@@ -90,26 +90,27 @@ export default [
       typescript(),
     ],
   },
-  {
-    input: './src/plugin.ts',
-    output: {
-      file: `./dist/umd/plugin.js`,
-      name: 'nuxtSpearlyCmsModulePlugin',
-      format: 'umd',
-    },
-    plugins: [
-      vue({
-        compileTemplate: true,
-      }),
-      nodeResolve({
-        rootDir: 'src',
-        declaration: true,
-      }),
-      commonjs(),
-      typescript(),
-      buble({
-        transforms: { dangerousForOf: true }
-      }),
-    ],
-  },
+  // {
+  //   input: './src/plugin.ts',
+  //   output: {
+  //     file: `./dist/umd/plugin.js`,
+  //     name: 'nuxtSpearlyCmsModulePlugin',
+  //     format: 'umd',
+  //   },
+  //   plugins: [
+  //     vue({
+  //       compileTemplate: true,
+  //     }),
+  //     nodeResolve({
+  //       rootDir: 'src',
+  //       declaration: true,
+  //     }),
+  //     commonjs(),
+  //     typescript(),
+  //     buble({
+  //       transforms: { dangerousForOf: true }
+  //     }),
+  //   ],
+  //   ete
+  // },
 ]

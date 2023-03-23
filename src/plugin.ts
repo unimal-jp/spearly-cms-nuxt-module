@@ -30,7 +30,7 @@ export type ListProps = { order?: string; orderBy?: string } & Omit<GetParams, '
 
 const plugin: Plugin = function (_, inject) {
   const opt = JSON.parse('<%= serialize(options) %>')
-  const apiClient = new SpearlyApiClient('api.spearly.com', opt.options.apiKey)
+  const apiClient = new SpearlyApiClient(opt.options.apiKey)
 
   Vue.component<ListData, { $spearly: SpearlyApiClient }, unknown, ListProps>(
     // eslint-disable-next-line vue/component-definition-name-casing
