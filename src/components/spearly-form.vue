@@ -18,10 +18,9 @@
 
           <p v-if="form.startedAt || form.endedAt" class="spearly-form-period">
             <span>
-              このフォームの受付期間は
-              {{ form.startedAt ? formattedDate(form.startedAt) : '' }}〜
-              {{ form.endedAt ? formattedDate(form.endedAt) : '' }}
-              です。
+              このフォームの受付期間は{{ form.startedAt ? formattedDate(form.startedAt) : '' }}〜{{
+                form.endedAt ? formattedDate(form.endedAt) : ''
+              }}です。
             </span>
           </p>
 
@@ -233,6 +232,7 @@ export default Vue.extend<
       },
       answers: {
         _spearly_gotcha: '',
+        confirmation_email: '',
       },
       files: {},
       validateErrors: [],
@@ -243,9 +243,20 @@ export default Vue.extend<
     }
   },
   async fetch() {
-    const res = await this.$spearly.getFormLatest((this as any).id)
-    console.log(res)
+    const res: Form = await this.$spearly.getFormLatest((this as any).id)
     this.form = res
+
+    if (res.confirmationEmail.enabled) {
+      this.form.fields.unshift({
+        identifier: 'confirmation_email',
+        name: res.confirmationEmail.name,
+        inputType: 'email',
+        description: res.confirmationEmail.description,
+        order: 0,
+        required: true,
+      })
+    }
+
     this.isLoaded = true
   },
   computed: {
@@ -385,6 +396,7 @@ export default Vue.extend<
           this.answers[identifier] =
             this.form.fields.find((field) => field.identifier === identifier)?.inputType === 'checkbox' ? [] : ''
         })
+        this.answers.confirmation_email = ''
         if (typeof location !== 'undefined' && this.form.callbackUrl) {
           location.href = this.form.callbackUrl
         } else {
