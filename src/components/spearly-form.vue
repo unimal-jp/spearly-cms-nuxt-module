@@ -18,7 +18,10 @@
 
           <p v-if="form.startedAt || form.endedAt" class="spearly-form-period">
             <span>
-              このフォームの受付期間は{{ formattedDate(form.startedAt) }}〜{{ formattedDate(form.endedAt) }}です。
+              このフォームの受付期間は
+              {{ form.startedAt ? formattedDate(form.startedAt) : '' }}〜
+              {{ form.endedAt ? formattedDate(form.endedAt) : '' }}
+              です。
             </span>
           </p>
 
@@ -34,11 +37,7 @@
 
             <template v-if="confirm">
               <p v-if="field.inputType !== 'file'" class="spearly-form-answer-confirm">
-                {{
-                  Array.isArray(answers[field.identifier])
-                    ? answers[field.identifier].join(', ')
-                    : answers[field.identifier]
-                }}
+                {{ answers[field.identifier] }}
               </p>
               <p v-else class="spearly-form-answer-confirm">
                 {{ files[field.identifier] }}
@@ -65,7 +64,7 @@
                 :aria-describedby="field.description ? `${field.identifier}-description` : null"
               />
             </template>
-            <template v-else-if="field.inputType === 'radio'">
+            <template v-else-if="field.inputType === 'radio' && field.data">
               <label v-for="(option, i) in field.data.options" :key="i" class="spearly-form-radio">
                 <input
                   v-model="answers[field.identifier]"
@@ -79,7 +78,7 @@
                 <span>{{ option }}</span>
               </label>
             </template>
-            <template v-else-if="field.inputType === 'checkbox'">
+            <template v-else-if="field.inputType === 'checkbox' && field.data">
               <label v-for="(option, i) in field.data.options" :key="i" class="spearly-form-checkbox">
                 <input
                   v-model="answers[field.identifier]"
@@ -98,7 +97,11 @@
                 <input
                   :name="field.identifier"
                   :required="field.required"
-                  :accept="field.data.allowedExtensions.map((extension) => `.${extension}`).join(',')"
+                  :accept="
+                    field.data && field.data.allowedExtensions
+                      ? field.data.allowedExtensions.map((extension) => `.${extension}`).join(',')
+                      : ''
+                  "
                   type="file"
                   @change="onChangeFile($event, field.identifier)"
                 />
@@ -217,6 +220,16 @@ export default Vue.extend<
         startedAt: null,
         endedAt: null,
         createdAt: null,
+        confirmationEmail: {
+          enabled: false,
+          name: '',
+          description: '',
+        },
+        confirmationScreen: {
+          enabled: false,
+          backButtonLabel: '',
+          submitButtonLabel: '',
+        },
       },
       answers: {
         _spearly_gotcha: '',
