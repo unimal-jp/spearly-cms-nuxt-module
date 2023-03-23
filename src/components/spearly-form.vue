@@ -323,7 +323,7 @@ export default Vue.extend<
       })
 
       numberFields.forEach((identifier) => {
-        if (this.answers[identifier] && !/^[0-9]+$/.test(this.answers[identifier] as string)) {
+        if (this.answers[identifier] && !/^[\-\+0-9]+$/.test(this.answers[identifier] as string)) {
           this.validateErrors.push({ identifier, message: '数字を入力してください。' })
         }
       })
