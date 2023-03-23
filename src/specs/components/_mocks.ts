@@ -46,6 +46,16 @@ export const createFormMock = (startedAt: Date | null = null, endedAt: Date | nu
   name: 'Form Name',
   description: 'Form description.',
   thankYouMessage: 'Thank You Messaage.',
+  confirmationEmail: {
+    enabled: true,
+    name: 'e-mail',
+    description: 'description',
+  },
+  confirmationScreen: {
+    enabled: true,
+    backButtonLabel: 'Back',
+    submitButtonLabel: 'Submit',
+  },
   fields: [
     {
       identifier: 'text',
