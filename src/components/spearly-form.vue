@@ -140,11 +140,11 @@
           </p>
 
           <button :disabled="!isActive" class="spearly-form-submit" @click="onClick">
-            <span>送信</span>
+            <span>{{ form.confirmationScreen.enabled ? form.confirmationScreen.submitButtonLabel : '送信' }}</span>
           </button>
 
           <button v-if="confirm" class="spearly-form-back" @click="confirm = false">
-            <span>戻る</span>
+            <span>{{ form.confirmationScreen.backButtonLabel }}</span>
           </button>
         </div>
         <div v-else class="spearly-form-thanks">
@@ -244,6 +244,7 @@ export default Vue.extend<
   },
   async fetch() {
     const res = await this.$spearly.getFormLatest((this as any).id)
+    console.log(res)
     this.form = res
     this.isLoaded = true
   },
@@ -370,8 +371,10 @@ export default Vue.extend<
       if (!this.confirm) {
         this.validate()
         if (this.validateErrors.length) return
-        this.confirm = true
-        return
+        if (this.form.confirmationScreen.enabled) {
+          this.confirm = true
+          return
+        }
       }
       this.submit(this.answers)
     },
