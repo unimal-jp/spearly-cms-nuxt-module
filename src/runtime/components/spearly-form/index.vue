@@ -136,11 +136,13 @@
           </p>
 
           <button :disabled="!isActive" class="spearly-form-submit" @click="onClick">
-            <span>送信</span>
+            <span>{{
+              state.form.confirmationScreen.enabled ? state.form.confirmationScreen.submitButtonLabel : '送信'
+            }}</span>
           </button>
 
           <button v-if="state.confirm" class="spearly-form-back" @click="state.confirm = false">
-            <span>戻る</span>
+            <span>{{ state.form.confirmationScreen.backButtonLabel }}</span>
           </button>
         </div>
         <div v-else class="spearly-form-thanks">
@@ -182,6 +184,16 @@ const state = reactive<SpearlyFormState>({
     startedAt: null,
     endedAt: null,
     createdAt: null,
+    confirmationScreen: {
+      enabled: false,
+      backButtonLabel: '',
+      submitButtonLabel: '',
+    },
+    confirmationEmail: {
+      enabled: false,
+      name: '',
+      description: '',
+    },
   },
   answers: {
     _spearly_gotcha: '',
@@ -320,8 +332,11 @@ const onClick = () => {
   if (!state.confirm) {
     validate()
     if (hasError.value) return
-    state.confirm = true
-    return
+
+    if (state.form.confirmationScreen.enabled) {
+      state.confirm = true
+      return
+    }
   }
   submit(state.answers)
 }
