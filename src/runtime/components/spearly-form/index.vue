@@ -46,12 +46,13 @@
             <template v-else-if="['text', 'number', 'email', 'tel', 'url'].includes(field.inputType)">
               <input
                 :id="field.identifier"
-                v-model="state.answers[field.identifier]"
+                :value="state.answers[field.identifier]"
                 :required="field.required"
                 :disabled="!isActive"
                 :aria-invalid="!!state.errors.get(field.identifier)"
                 :aria-describedby="field.description ? `${field.identifier}-description` : null"
                 :type="field.inputType"
+                @input="onInput(field.identifier, $event)"
               />
             </template>
             <template v-else-if="field.inputType === 'text_area'">
@@ -354,6 +355,12 @@ const onClick = () => {
     }
   }
   submit(state.answers)
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const onInput = (identifier: string, event: Event) => {
+  if (!event.target || !(event.target instanceof HTMLInputElement)) return
+  state.answers[identifier] = event.target.value
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
