@@ -46,12 +46,13 @@
             <template v-else-if="['text', 'number', 'email', 'tel', 'url'].includes(field.inputType)">
               <input
                 :id="field.identifier"
-                v-model="state.answers[field.identifier]"
+                :value="state.answers[field.identifier]"
                 :required="field.required"
                 :disabled="!isActive"
                 :aria-invalid="!!state.errors.get(field.identifier)"
                 :aria-describedby="field.description ? `${field.identifier}-description` : null"
                 :type="field.inputType"
+                @input="onInput(field.identifier, $event)"
               />
             </template>
             <template v-else-if="field.inputType === 'text_area'">
@@ -136,11 +137,13 @@
           </p>
 
           <button :disabled="!isActive" class="spearly-form-submit" @click="onClick">
-            <span>送信</span>
+            <span>{{
+              state.form.confirmationScreen.enabled ? state.form.confirmationScreen.submitButtonLabel : '送信'
+            }}</span>
           </button>
 
           <button v-if="state.confirm" class="spearly-form-back" @click="state.confirm = false">
-            <span>戻る</span>
+            <span>{{ state.form.confirmationScreen.backButtonLabel }}</span>
           </button>
         </div>
         <div v-else class="spearly-form-thanks">
@@ -182,9 +185,20 @@ const state = reactive<SpearlyFormState>({
     startedAt: null,
     endedAt: null,
     createdAt: null,
+    confirmationScreen: {
+      enabled: false,
+      backButtonLabel: '',
+      submitButtonLabel: '',
+    },
+    confirmationEmail: {
+      enabled: false,
+      name: '',
+      description: '',
+    },
   },
   answers: {
     _spearly_gotcha: '',
+    confirmation_email: '',
   },
   files: {},
   errors: new Map(),
@@ -214,6 +228,20 @@ const fetchFormLatest = async () => {
   try {
     const res = await nuxtApp.vueApp._context.provides.$spearly.getFormLatest(props.id)
     state.form = res
+
+    if (
+      res.confirmationEmail.enabled &&
+      !state.form.fields.find((field) => field.identifier === 'confirmation_email')
+    ) {
+      state.form.fields.unshift({
+        identifier: 'confirmation_email',
+        name: res.confirmationEmail.name,
+        inputType: 'email',
+        description: res.confirmationEmail.description,
+        order: 0,
+        required: true,
+      })
+    }
   } catch (error) {
     console.error(error)
   } finally {
@@ -264,7 +292,7 @@ const validate = () => {
   })
 
   numberFields.forEach((identifier) => {
-    if (state.answers[identifier] && !/^[0-9]+$/.test(state.answers[identifier] as string)) {
+    if (state.answers[identifier] && !/^[\-\+0-9]+$/.test(state.answers[identifier] as string)) {
       state.errors.set(identifier, '数字を入力してください。')
     }
   })
@@ -320,10 +348,19 @@ const onClick = () => {
   if (!state.confirm) {
     validate()
     if (hasError.value) return
-    state.confirm = true
-    return
+
+    if (state.form.confirmationScreen.enabled) {
+      state.confirm = true
+      return
+    }
   }
   submit(state.answers)
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const onInput = (identifier: string, event: Event) => {
+  if (!event.target || !(event.target instanceof HTMLInputElement)) return
+  state.answers[identifier] = event.target.value
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

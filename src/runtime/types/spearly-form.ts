@@ -12,10 +12,26 @@ export type SpearlyForm = {
   publicUid: string
   startedAt: Date | null
   thankYouMessage: string
+  confirmationEmail: {
+    enabled: boolean
+    name: string
+    description: string
+  }
+  confirmationScreen: {
+    enabled: boolean
+    backButtonLabel: string
+    submitButtonLabel: string
+  }
 }
 
 export type ServerSpearlyForm = {
   startedAt: string | null
   endedAt: string | null
   createdAt: string
-} & Omit<SpearlyForm, 'startedAt' | 'endedAt' | 'createdAt'>
+  confirmationEmailEnabled: boolean
+  confirmationEmailName: string
+  confirmationEmailDescription: string
+  confirmationScreenBeforeSubmitEnabled: boolean
+  backButtonLabel: string | null
+  submitButtonLabel: string | null
+} & Omit<SpearlyForm, 'startedAt' | 'endedAt' | 'createdAt' | 'confirmationEmail' | 'confirmationScreen'>
