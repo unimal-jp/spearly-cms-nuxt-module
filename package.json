@@ -1,6 +1,6 @@
 {
   "name": "@spearly/nuxt-module",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "This package allows you to easily implement Spearly in your nuxt project!",
   "main": "dist/cjs/nuxt-module.js",
   "module": "dist/esm/nuxt-module.js",
