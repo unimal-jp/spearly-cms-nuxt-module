@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { Plugin } from '@nuxt/types'
 import { SpearlyContentList, SpearlyContent, SpearlyForm } from './components'
-import { SpearlyApiClient, Content, Form, GetParams } from '@spearly/sdk-js'
+import { SpearlyApiClient, SpearlyAnalytics, Content, Form, GetParams } from '@spearly/sdk-js'
 
 export type ListData = {
   contents: Content[]
@@ -31,6 +31,7 @@ export type ListProps = { order?: string; orderBy?: string } & Omit<GetParams, '
 const plugin: Plugin = function (_, inject) {
   const opt = JSON.parse('<%= serialize(options) %>')
   const apiClient = new SpearlyApiClient(opt.options.apiKey)
+  const analytics = new SpearlyAnalytics()
 
   Vue.component<ListData, { $spearly: SpearlyApiClient }, unknown, ListProps>(
     // eslint-disable-next-line vue/component-definition-name-casing
@@ -56,6 +57,7 @@ const plugin: Plugin = function (_, inject) {
   )
 
   inject('spearly', apiClient)
+  inject('spearlyAnalytics', analytics)
 }
 
 export default plugin
