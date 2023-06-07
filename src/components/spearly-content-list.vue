@@ -4,7 +4,7 @@
       <component :is="loading" />
     </template>
     <component :is="wrapper" v-else>
-      <component :is="item" v-for="content in contents" :key="content.publicUid">
+      <component :is="item" v-for="content in contents" :key="content.attributes.publicUid">
         <slot :content="content" />
       </component>
     </component>
@@ -35,7 +35,17 @@ export type Data = {
   totalContentsCount: number
 }
 
-export default Vue.extend<Data, unknown, unknown, Props>({
+export type Computed = {
+  paging: {
+    limit?: number
+    offset?: number
+    next: number
+    matchingContentsCount: number
+    totalContentsCount: number
+  }
+}
+
+export default Vue.extend<Data, Computed, unknown, Props>({
   props: {
     id: { type: String, required: true },
     limit: { type: Number },
