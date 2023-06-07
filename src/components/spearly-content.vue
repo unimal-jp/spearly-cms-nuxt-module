@@ -11,12 +11,14 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Content } from '@spearly/sdk-js'
+import type { PropType } from 'vue'
+import type { Content, GetContentParams } from '@spearly/sdk-js'
 
 export type Props = {
   id: string
   previewToken?: string
   loading?: string
+  patternName?: 'a' | 'b'
 }
 
 export type Data = {
@@ -35,12 +37,14 @@ export default Vue.extend<Data, unknown, unknown, Props>({
     id: { type: String, required: true },
     loading: { type: String },
     previewToken: { type: String },
+    patternName: { type: String as PropType<'a' | 'b'> },
   },
   data() {
     return {
       content: {
         attributes: {
           publicUid: '',
+          patternName: 'a',
           createdAt: null,
           updatedAt: null,
           publishedAt: null,
@@ -60,13 +64,26 @@ export default Vue.extend<Data, unknown, unknown, Props>({
   },
   async fetch() {
     if (!this.$props.previewToken) {
-      const res = await this.$spearly.getContent(this.$props.id)
+      const params: GetContentParams = {}
+      if (this.$props.patternName) {
+        params.patternName = this.$props.patternName
+      }
+
+      const res = await this.$spearly.getContent(this.$props.id, params)
       this.content = res
       this.isLoaded = true
     } else {
       const res = await this.$spearly.getContentPreview(this.$props.id, this.$props.previewToken)
       this.content = res
       this.isLoaded = true
+    }
+  },
+  mounted() {
+    if (!this.previewToken) {
+      this.$spearlyAnalytics.pageView({
+        contentId: this.id,
+        patternName: this.content.attributes.patternName,
+      })
     }
   },
   destroyed() {
