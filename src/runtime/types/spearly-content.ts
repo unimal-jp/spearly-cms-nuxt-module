@@ -3,6 +3,7 @@ import { SpearlyFieldTypeAll } from './spearly-field-type'
 export type SpearlyContent = {
   attributes: {
     contentAlias: string
+    patternName: 'a' | 'b'
     createdAt: Date
     fields: {
       data: SpearlyFieldTypeAll[]

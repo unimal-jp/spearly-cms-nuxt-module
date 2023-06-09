@@ -7,9 +7,12 @@ export type SpearlyGetParams = {
   orders?: { [key: string]: 'asc' | 'desc' }
   filterBy?: string
   filterValue?: string | string[]
-  filterMode: 'or' | 'and'
-  filters: { [key: string]: string | string[] }
+  filterMode?: 'or' | 'and'
+  filters?: { [key: string]: string | string[] }
   filterRef?: string
   rangeFrom?: Date
   rangeTo?: Date
+  sessionId?: string
+  distinctId?: string
+  patternName?: 'a' | 'b'
 }

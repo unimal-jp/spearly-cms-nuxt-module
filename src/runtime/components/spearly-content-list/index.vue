@@ -14,8 +14,9 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount, reactive, computed, watch, type PropType } from 'vue'
+import { onBeforeUnmount, reactive, computed, watch } from 'vue'
 import { useNuxtApp } from '#app'
+import type { PropType } from 'vue'
 import type { SpearlyContentListState } from './types'
 import type { SpearlyGetParams } from '../../types'
 
@@ -34,6 +35,8 @@ const props = defineProps({
   filters: { type: Object as PropType<SpearlyGetParams['filters']> },
   rangeFrom: { type: Date },
   rangeTo: { type: Date },
+  sessionId: { type: String },
+  patternName: { type: String as PropType<SpearlyGetParams['patternName']> },
   wrapper: { type: [String, Object], default: 'div' },
   item: { type: [String, Object], default: 'div' },
   loading: { type: [String, Object] },

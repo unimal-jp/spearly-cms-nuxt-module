@@ -1,7 +1,7 @@
 import { SpearlyGetParams } from '../types'
 import { camelToSnake } from '.'
 
-export const bindQueriesFromParams = (params?: SpearlyGetParams): string => {
+export const toListParams = (params?: SpearlyGetParams): string => {
   if (!params) return ''
   let queries = '?'
 

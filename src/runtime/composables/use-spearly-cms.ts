@@ -1,4 +1,7 @@
-import {
+import { useSpearlyAnalytics } from './use-spearly-analytics'
+import { mapSpearlyContent, mapSpearlyForm, mapSpearlyFormAnswer, mapSpearlyList } from '../map'
+import { toListParams, toContentParams, recursiveToCamels } from '../utils'
+import type {
   ServerSpearlyContent,
   ServerSpearlyForm,
   ServerSpearlyFormAnswer,
@@ -7,10 +10,9 @@ import {
   SpearlyForm,
   SpearlyFormAnswer,
   SpearlyGetParams,
+  SpearlyGetContentParams,
   SpearlyList,
 } from '../types'
-import { mapSpearlyContent, mapSpearlyForm, mapSpearlyFormAnswer, mapSpearlyList } from '../map'
-import { bindQueriesFromParams, recursiveToCamels } from '../utils'
 
 export type UseSpearlyCMS = {
   getSpearlyList: (contentTypeId: string, params: SpearlyGetParams) => Promise<SpearlyList>
@@ -29,6 +31,8 @@ export const useSpearlyCMS = (apiKey: string): UseSpearlyCMS => {
     Accept: 'application/vnd.spearly.v2+json',
     Authorization: `Bearer ${apiKey}`,
   }
+
+  const { distinctId } = useSpearlyAnalytics()
 
   const getRequest = async <T>(endpoint: string, queries = ''): Promise<T> => {
     try {
@@ -60,14 +64,17 @@ export const useSpearlyCMS = (apiKey: string): UseSpearlyCMS => {
     }
   }
 
-  const getSpearlyList = async (contentTypeId: string, params?: SpearlyGetParams) => {
-    const queries = bindQueriesFromParams(params)
+  const getSpearlyList = async (contentTypeId: string, params: SpearlyGetParams = {}) => {
+    params.distinctId = params.distinctId || distinctId.value
+    const queries = toListParams(params)
     const response = await getRequest<ServerSpearlyList>(`/content_types/${contentTypeId}/contents`, queries)
     return mapSpearlyList(response)
   }
 
-  const getSpearlyContent = async (contentId: string) => {
-    const response = await getRequest<{ data: ServerSpearlyContent }>(`/contents/${contentId}`)
+  const getSpearlyContent = async (contentId: string, params: SpearlyGetContentParams = {}) => {
+    params.distinctId = params.distinctId || distinctId.value
+    const queries = toContentParams(params)
+    const response = await getRequest<{ data: ServerSpearlyContent }>(`/contents/${contentId}`, queries)
     return mapSpearlyContent(response.data)
   }
 
