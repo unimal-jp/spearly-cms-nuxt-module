@@ -305,6 +305,10 @@ The following two instance methods are provided.
 
 ### A/B Testing analytics
 
+> **Warning**  
+> A/B Testing does not support SSR and SSG, Only SPA can use this feature.  
+> We are working on it now, so please wait for a while.
+
 #### Impression
 
 If you are using the SpearlyContent component, you do not need to do anything special. The component will send the impression for you.
