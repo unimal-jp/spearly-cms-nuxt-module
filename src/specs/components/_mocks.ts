@@ -9,6 +9,7 @@ export const createContentMock = (index = 0): Content => ({
     nextContent: null,
     previousContent: null,
     contentAlias: `content_${index}`,
+    patternName: 'b',
     fields: {
       data: [
         {

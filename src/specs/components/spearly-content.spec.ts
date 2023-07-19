@@ -3,11 +3,18 @@ import SpearlyContent from '../../components/spearly-content.vue'
 
 describe('SpearlyContent', () => {
   let wrapper: Wrapper<SpearlyContent>
+  let pageViewMock: jest.Mock
 
   beforeEach(() => {
+    pageViewMock = jest.fn()
     wrapper = shallowMount(SpearlyContent, {
       propsData: {
         id: 'CONTENT_ID',
+      },
+      mocks: {
+        $spearlyAnalytics: {
+          pageView: pageViewMock,
+        },
       },
     })
   })
@@ -15,6 +22,15 @@ describe('SpearlyContent', () => {
   describe('initialized', () => {
     it('snapshot', () => {
       expect(wrapper.element).toMatchSnapshot()
+    })
+  })
+
+  describe('analytics', () => {
+    it('send a pageView', () => {
+      expect(pageViewMock).toHaveBeenCalledWith({
+        contentId: 'CONTENT_ID',
+        patternName: 'a',
+      })
     })
   })
 })
