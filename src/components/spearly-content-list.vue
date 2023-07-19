@@ -4,7 +4,7 @@
       <component :is="loading" />
     </template>
     <component :is="wrapper" v-else>
-      <component :is="item" v-for="content in contents" :key="content.publicUid">
+      <component :is="item" v-for="content in contents" :key="content.attributes.publicUid">
         <slot :content="content" />
       </component>
     </component>
@@ -25,7 +25,7 @@ export type Props = {
   wrapper?: string
   item?: string
   loading?: string
-} & Omit<GetParams, 'order' | 'orderBy' | 'orderDirection'>
+} & Omit<GetParams, 'order' | 'orderBy' | 'orderDirection' | 'distinctId'>
 
 export type Data = {
   contents: Content[]
@@ -35,7 +35,17 @@ export type Data = {
   totalContentsCount: number
 }
 
-export default Vue.extend<Data, unknown, unknown, Props>({
+export type Computed = {
+  paging: {
+    limit?: number
+    offset?: number
+    next: number
+    matchingContentsCount: number
+    totalContentsCount: number
+  }
+}
+
+export default Vue.extend<Data, Computed, unknown, Props>({
   props: {
     id: { type: String, required: true },
     limit: { type: Number },
@@ -50,6 +60,8 @@ export default Vue.extend<Data, unknown, unknown, Props>({
     filters: { type: Object as PropType<GetParams['filters']> },
     rangeFrom: { type: Date },
     rangeTo: { type: Date },
+    sessionId: { type: String },
+    patternName: { type: String as PropType<'a' | 'b'> },
     wrapper: { type: [String], default: 'div' },
     item: { type: [String], default: 'div' },
     loading: { type: [String] },
@@ -77,6 +89,8 @@ export default Vue.extend<Data, unknown, unknown, Props>({
     if (this.filters) params.filters = this.filters
     if (this.rangeFrom) params.rangeFrom = this.rangeFrom
     if (this.rangeTo) params.rangeTo = this.rangeTo
+    if (this.sessionId) params.sessionId = this.sessionId
+    if (this.patternName) params.patternName = this.patternName
     const res = await this.$spearly.getList(this.id, Object.keys(params).length ? params : undefined)
     this.contents = res.data
     this.isLoaded = true
