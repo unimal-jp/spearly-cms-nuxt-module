@@ -1,6 +1,8 @@
 import { defineNuxtModule, createResolver, addPlugin, addComponent } from '@nuxt/kit'
 import { SpearlyNuxtModuleOptions } from './types'
 
+export * from './runtime/composables'
+
 export default defineNuxtModule<SpearlyNuxtModuleOptions>({
   meta: {
     name: '@spearly/nuxt-module',

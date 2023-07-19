@@ -95,6 +95,8 @@ Specify a component name for `loading` prop.
 - `filter-mode` ('or' | 'and')
 - `range-to` (string)
 - `range-from` (string)
+- `session-id` (string)
+- `pattern-name` ('a' | 'b')
 - `wrapper` (string | Vue)
 - `item` (string | Vue)
 - `loading` (Vue)
@@ -140,6 +142,10 @@ Since the `pager slot has a `paging` scope, you can freely create paginations wi
   </spearly-content>
 </template>
 ```
+
+#### Advanced props
+
+- `pattern-name` ('a' | 'b')
 
 #### use Show Loading
 
@@ -229,4 +235,45 @@ Specify a component name for `loading` prop.
 <template>
   <spearly-form loading="Loading" id="FORM_ID" />
 </template>
+```
+
+### Provide data
+
+The following two data are provide.
+
+- `$spearly` : API Client for get content list, form submission, etc.
+- `$spearlyAnalytics` : Used to send pageView (impressions) and conversions required for A/B Testing
+
+### A/B Testing analytics
+
+> **Warning**  
+> A/B Testing does not support SSR and SSG, Only SPA can use this feature.  
+> We are working on it now, so please wait for a while.
+
+#### Impression
+
+If you are using the SpearlyContent component, you do not need to do anything special. The component will send the impression for you.
+
+If you wish to send your own, you can do so with the following code:
+
+```js
+const $spearlyAnalytics = inject('$spearlyAnalytics')
+await $spearlyAnalytics.pageView({
+  contentId: CONTENT_ID,
+  patternName: 'a' or 'b',
+})
+```
+
+#### Conversion
+
+If you are using A/B testing, you can count conversions by using the conversion method as follows
+
+```js
+const $spearlyAnalytics = inject('$spearlyAnalytics')
+const handleSubmit = async () => {
+  await $spearlyAnalytics.conversion({
+    contentId: CONTENT_ID,
+    patternName: 'a' or 'b',
+  })
+}
 ```
