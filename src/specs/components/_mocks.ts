@@ -65,6 +65,7 @@ export const createFormMock = (startedAt: Date | null = null, endedAt: Date | nu
       inputType: 'text',
       order: 0,
       required: true,
+      validationRegex: '',
     },
     {
       identifier: 'number',
@@ -73,6 +74,7 @@ export const createFormMock = (startedAt: Date | null = null, endedAt: Date | nu
       inputType: 'number',
       order: 1,
       required: true,
+      validationRegex: '',
     },
     {
       identifier: 'email',
@@ -81,6 +83,7 @@ export const createFormMock = (startedAt: Date | null = null, endedAt: Date | nu
       inputType: 'email',
       order: 2,
       required: true,
+      validationRegex: '',
     },
     {
       identifier: 'tel',
@@ -89,6 +92,7 @@ export const createFormMock = (startedAt: Date | null = null, endedAt: Date | nu
       inputType: 'tel',
       order: 3,
       required: true,
+      validationRegex: '/^[+]?\\d+-\\d+-\\d+$/',
     },
     {
       identifier: 'url',
@@ -97,6 +101,7 @@ export const createFormMock = (startedAt: Date | null = null, endedAt: Date | nu
       inputType: 'url',
       order: 4,
       required: true,
+      validationRegex: '',
     },
     {
       identifier: 'textArea',
@@ -105,6 +110,7 @@ export const createFormMock = (startedAt: Date | null = null, endedAt: Date | nu
       inputType: 'text_area',
       order: 5,
       required: true,
+      validationRegex: '',
     },
     {
       identifier: 'radio',
@@ -117,6 +123,7 @@ export const createFormMock = (startedAt: Date | null = null, endedAt: Date | nu
         options: ['r1', 'r2'],
         allowedExtensions: [],
       },
+      validationRegex: '',
     },
     {
       identifier: 'checkbox',
@@ -129,6 +136,7 @@ export const createFormMock = (startedAt: Date | null = null, endedAt: Date | nu
         options: ['c1', 'c2', 'c3'],
         allowedExtensions: [],
       },
+      validationRegex: '',
     },
   ],
   callbackUrl: '',

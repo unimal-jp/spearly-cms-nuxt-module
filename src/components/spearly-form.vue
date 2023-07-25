@@ -254,6 +254,7 @@ export default Vue.extend<
         description: res.confirmationEmail.description,
         order: 0,
         required: true,
+        validationRegex: '',
       })
     }
 
@@ -346,8 +347,13 @@ export default Vue.extend<
       })
 
       telFields.forEach((identifier) => {
-        if (this.answers[identifier] && !/^[0-9\-]+$/.test(this.answers[identifier] as string)) {
-          this.validateErrors.push({ identifier, message: '電話番号を入力してください。' })
+        const field = this.form.fields.find((field) => field.identifier === identifier)!
+        if (!field.validationRegex) return
+
+        const regex = new RegExp(field.validationRegex)
+        if (this.answers[identifier] && !regex.test(this.answers[identifier] as string)) {
+          const format = field.validationRegex === '^[+]?\\d+$' ? 'ハイフンなし' : '半角数字とハイフン'
+          this.validateErrors.push({ identifier, message: `電話番号（${format}）を入力してください。` })
         }
       })
 
