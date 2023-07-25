@@ -352,7 +352,8 @@ export default Vue.extend<
 
         const regex = new RegExp(field.validationRegex)
         if (this.answers[identifier] && !regex.test(this.answers[identifier] as string)) {
-          this.validateErrors.push({ identifier, message: '電話番号を入力してください。' })
+          const format = field.validationRegex === '^[+]?\\d+$' ? 'ハイフンなし' : '半角数字とハイフン'
+          this.validateErrors.push({ identifier, message: `電話番号（${format}）を入力してください。` })
         }
       })
 
