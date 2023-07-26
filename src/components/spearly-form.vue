@@ -106,6 +106,21 @@
                 />
               </label>
             </template>
+            <template v-else-if="field.inputType === 'select_box' && field.data">
+              <select
+                :id="field.identifier"
+                v-model="answers[field.identifier]"
+                :name="field.identifier"
+                :require="field.required"
+                :disabled="!isActive"
+                :aria-invalid="!!getErrorMessage(field.identifier)"
+                :aria-describedby="field.description ? `${field.identifier}-description` : null"
+              >
+                <option v-for="(option, i) in field.data.options" :key="i" :value="option">
+                  {{ option }}
+                </option>
+              </select>
+            </template>
 
             <p v-if="field.description" :id="`${field.identifier}-description`" class="spearly-form-field-description">
               {{ field.description }}

@@ -322,6 +322,55 @@ exports[`SpearlyForm Snapshot Basic 1`] = `
        
       <!---->
     </fieldset>
+    <fieldset>
+      <label
+        for="select"
+      >
+        
+            Select
+            
+        <!---->
+      </label>
+       
+      <select
+        aria-describedby="select-description"
+        id="select"
+        name="select"
+      >
+        <option
+          value="s1"
+        >
+          
+                s1
+              
+        </option>
+        <option
+          value="s2"
+        >
+          
+                s2
+              
+        </option>
+        <option
+          value="s3"
+        >
+          
+                s3
+              
+        </option>
+      </select>
+       
+      <p
+        class="spearly-form-field-description"
+        id="select-description"
+      >
+        
+            Select description.
+          
+      </p>
+       
+      <!---->
+    </fieldset>
      
     <input
       name="_spearly_gotcha"
