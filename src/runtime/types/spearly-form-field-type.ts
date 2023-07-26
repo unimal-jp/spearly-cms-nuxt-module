@@ -8,3 +8,4 @@ export type SpearlyFormFieldType =
   | 'checkbox'
   | 'text_area'
   | 'file'
+  | 'select_box'
