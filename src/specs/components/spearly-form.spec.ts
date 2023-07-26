@@ -21,6 +21,7 @@ const filledAnswers = {
   textArea: 'text',
   radio: '',
   checkbox: [],
+  select: '',
 }
 
 const createWrapper = (
@@ -86,6 +87,7 @@ describe('SpearlyForm', () => {
           textArea: '',
           radio: '',
           checkbox: [],
+          select: '',
         })
       })
     })
@@ -197,6 +199,7 @@ describe('SpearlyForm', () => {
           textArea: '',
           radio: '',
           checkbox: [],
+          select: '',
         })
       })
 
