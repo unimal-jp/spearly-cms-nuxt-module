@@ -16,8 +16,8 @@ import type {
 
 export type UseSpearlyCMS = {
   getSpearlyList: (contentTypeId: string, params: SpearlyGetParams) => Promise<SpearlyList>
-  getSpearlyContent: (contentId: string) => Promise<SpearlyContent>
-  getContentPreview: (contentId: string, previewToken: string) => Promise<SpearlyContent>
+  getSpearlyContent: (contentTypeId: string, contentId: string) => Promise<SpearlyContent>
+  getContentPreview: (contentTypeId: string, contentId: string, previewToken: string) => Promise<SpearlyContent>
   getFormLatest: (publicUid: string) => Promise<SpearlyForm>
   postFormAnswers: (
     formVersionId: number,
@@ -71,16 +71,19 @@ export const useSpearlyCMS = (apiKey: string): UseSpearlyCMS => {
     return mapSpearlyList(response)
   }
 
-  const getSpearlyContent = async (contentId: string, params: SpearlyGetContentParams = {}) => {
+  const getSpearlyContent = async (contentTypeId: string, contentId: string, params: SpearlyGetContentParams = {}) => {
     params.distinctId = params.distinctId || distinctId.value
     const queries = toContentParams(params)
-    const response = await getRequest<{ data: ServerSpearlyContent }>(`/contents/${contentId}`, queries)
+    const response = await getRequest<{ data: ServerSpearlyContent }>(
+      `/content_types/${contentTypeId}/contents/${contentId}`,
+      queries
+    )
     return mapSpearlyContent(response.data)
   }
 
-  const getContentPreview = async (contentId: string, previewToken: string) => {
+  const getContentPreview = async (contentTypeId: string, contentId: string, previewToken: string) => {
     const response = await getRequest<{ data: ServerSpearlyContent }>(
-      `/contents/${contentId}`,
+      `/content_types/${contentTypeId}/contents/${contentId}`,
       `?preview_token=${previewToken}`
     )
     return mapSpearlyContent(response.data)
