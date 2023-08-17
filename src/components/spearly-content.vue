@@ -16,6 +16,7 @@ import type { Content, GetContentParams } from '@spearly/sdk-js'
 
 export type Props = {
   id: string
+  contentTypeId: string
   previewToken?: string
   loading?: string
   patternName?: 'a' | 'b'
@@ -35,6 +36,7 @@ export type Data = {
 export default Vue.extend<Data, unknown, unknown, Props>({
   props: {
     id: { type: String, required: true },
+    contentTypeId: { type: String, required: true },
     loading: { type: String },
     previewToken: { type: String },
     patternName: { type: String as PropType<'a' | 'b'> },
@@ -69,11 +71,15 @@ export default Vue.extend<Data, unknown, unknown, Props>({
         params.patternName = this.$props.patternName
       }
 
-      const res = await this.$spearly.getContent(this.$props.id, params)
+      const res = await this.$spearly.getContent(this.$props.contentTypeId, this.$props.id, params)
       this.content = res
       this.isLoaded = true
     } else {
-      const res = await this.$spearly.getContentPreview(this.$props.id, this.$props.previewToken)
+      const res = await this.$spearly.getContentPreview(
+        this.$props.contentTypeId,
+        this.$props.id,
+        this.$props.previewToken
+      )
       this.content = res
       this.isLoaded = true
     }

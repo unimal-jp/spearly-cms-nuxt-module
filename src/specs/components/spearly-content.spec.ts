@@ -9,6 +9,7 @@ describe('SpearlyContent', () => {
     pageViewMock = jest.fn()
     wrapper = shallowMount(SpearlyContent, {
       propsData: {
+        contentTypeId: 'CONTENT_TYPE_ID',
         id: 'CONTENT_ID',
       },
       mocks: {

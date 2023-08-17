@@ -20,8 +20,6 @@ $ npm i -S @spearly/nuxt-module
 $ yarn add @spearly/nuxt-module
 ```
 
-#### 
-
 ### Setup
 
 #### nuxt.config.(j|t)s
@@ -165,9 +163,12 @@ export default {}
 
 ### Content
 
+> **Warning**
+> `content-type-id` props have been required since v0.10.0
+
 ```vue
 <template>
-  <spearly-content id="CONTENT_PUBLIC_UID">
+  <spearly-content content-type-id="CONTENT_TYPE_ID" id="CONTENT_PUBLIC_UID">
     <template v-slot="content">
       <header>
         <h1>{{ content.values.title }}</h1>
@@ -192,7 +193,7 @@ Specify a component name for `loading` prop.
 
 ```vue
 <template>
-  <spearly-content loading="Loading" id="CONTENT_PUBLIC_UID">
+  <spearly-content loading="Loading" content-type-id="CONTENT_TYPE_ID" id="CONTENT_PUBLIC_UID">
     <template v-slot="content">
       <header>
         <h1>{{ content.values.title }}</h1>
@@ -213,7 +214,7 @@ You can preview the draft content by specifying `preview-token` and `id`.
 
 ```vue
 <template>
-  <spearly-content :id="$route.query.content_id" :preview-token="$route.query.preview_token">
+  <spearly-content content-type-id="CONTENT_TYPE_ID" :id="$route.query.content_id" :preview-token="$route.query.preview_token">
     <template v-slot="content">
       <header>
         <h1>{{ content.values.title }}</h1>
