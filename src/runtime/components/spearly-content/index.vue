@@ -20,6 +20,7 @@ import type { SpearlyGetContentParams } from '../../types'
 const app = useNuxtApp()
 const props = defineProps({
   id: { type: String, required: true },
+  contentTypeId: { type: String, required: true },
   patternName: { type: String as PropType<'a' | 'b'> },
   previewToken: { type: String },
   loading: { type: [String, Object] },
@@ -56,9 +57,17 @@ const fetchContent = async () => {
     if (!props.previewToken) {
       const params: SpearlyGetContentParams = {}
       if (props.patternName) params.patternName = props.patternName
-      state.content = await app.vueApp._context.provides.$spearly.getSpearlyContent(props.id, params)
+      state.content = await app.vueApp._context.provides.$spearly.getSpearlyContent(
+        props.contentTypeId,
+        props.id,
+        params
+      )
     } else {
-      state.content = await app.vueApp._context.provides.$spearly.getSpearlyContent(props.id, props.previewToken)
+      state.content = await app.vueApp._context.provides.$spearly.getSpearlyContent(
+        props.contentTypeId,
+        props.id,
+        props.previewToken
+      )
     }
   } catch (error) {
     console.error(error)
